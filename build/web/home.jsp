@@ -18,7 +18,9 @@
        
         <c:forEach var="item" items="${al}">
             <br>
-            <h3><c:out value="${item.getInterfaceId()}"></c:out> : <a href="<c:out value="${item.getUrl()}"></c:out>"><c:out value="${item.getName()}"></c:out></a></h3>            
+            <h3><c:out value="${item.getInterfaceId()}"></c:out> : <a href="<c:out value="${item.getUrl()}?inid=${item.getInterfaceId()}"></c:out>">
+                    <c:out value="${item.getName()}"></c:out>
+                </a></h3>            
         </c:forEach>
     </body>
 </html>

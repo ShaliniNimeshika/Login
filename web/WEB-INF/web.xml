@@ -27,20 +27,25 @@
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>DepositServlet</servlet-name>
-        <url-pattern>/deposit</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>WithdrawServlet</servlet-name>
-        <url-pattern>/withdraw</url-pattern>
-    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>TransferServlet</servlet-name>
+        <!--<url-pattern>/transfer?inid=1</url-pattern>-->
         <url-pattern>/transfer</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>WithdrawServlet</servlet-name>
+        <!--<url-pattern>/withdraw?inid=2</url-pattern>-->
+        <url-pattern>/withdraw</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DepositServlet</servlet-name>
+        <!--<url-pattern>/deposit?inid=3</url-pattern>-->
+        <url-pattern>/deposit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>StatisticServlet</servlet-name>
+        <!--<url-pattern>/statistic?inid=4</url-pattern>-->
         <url-pattern>/statistic</url-pattern>
     </servlet-mapping>
     <session-config>
