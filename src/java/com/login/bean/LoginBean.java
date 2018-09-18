@@ -13,10 +13,11 @@ public class LoginBean {
     private String username;
     private String password;
     private String role;
-
+    //private Page pages;
     /**
      * @return the username
      */
+    
     public String getUsername() {
         return username;
     }

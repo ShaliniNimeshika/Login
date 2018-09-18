@@ -11,16 +11,14 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Home</title>
     </head>
     <body>
-        
-        <c:set value="${param}" var="str"/>
-        length = ${f:length(str)}
+    <center><h1>Welcome ${uname}!</h1></center>
        
-        <c:forEach items="${f:split(str,' ')}" var="s">
+        <c:forEach var="item" items="${al}">
             <br>
-            ${s}
+            <h3><a href="<c:out value="${item.getUrl()}"></c:out>"><c:out value="${item.getName()}"></c:out></a></h3>            
         </c:forEach>
     </body>
 </html>
