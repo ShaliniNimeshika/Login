@@ -86,15 +86,13 @@ public class LoginServlet extends HttpServlet {
         
         String role = LoginDao.authenticateUser(loginbean);
        
-        
         if (role.equals("admin") || role.equals("user")) {
             ArrayList<PageBean> al;
             try {
                 al = LoginDao.loadPages();
-                for (int i = 0; i < al.size(); i++) {
-                    System.out.println(al.get(i).getUrl());
-                    
-                }
+//                for (int i = 0; i < al.size(); i++) {
+//                    System.out.println(al.get(i).getUrl());
+//                }
                 request.setAttribute("al", al);
                 request.setAttribute("uname", username);
                 request.getRequestDispatcher("home.jsp").forward(request, response);
@@ -104,9 +102,9 @@ public class LoginServlet extends HttpServlet {
         } else {
             out.println("Username :" + username);
             out.println("Password :" + password);
-            out.println("Role :" + role);
+            out.println("Status :" + role + " user identification");
+            out.println("\nCheck username and password");
         }
-        
     }
 
     @Override

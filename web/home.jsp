@@ -14,11 +14,11 @@
         <title>Home</title>
     </head>
     <body>
-    <center><h1>Welcome ${uname}!</h1></center>
+    <center><h1>Welcome ${uname.toUpperCase()}!</h1></center>
        
         <c:forEach var="item" items="${al}">
             <br>
-            <h3><a href="<c:out value="${item.getUrl()}"></c:out>"><c:out value="${item.getName()}"></c:out></a></h3>            
+            <h3><c:out value="${item.getInterfaceId()}"></c:out> : <a href="<c:out value="${item.getUrl()}"></c:out>"><c:out value="${item.getName()}"></c:out></a></h3>            
         </c:forEach>
     </body>
 </html>
