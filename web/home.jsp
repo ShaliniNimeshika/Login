@@ -6,7 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@taglib prefix="f" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -18,9 +18,16 @@
        
         <c:forEach var="item" items="${al}">
             <br>
-            <h3><c:out value="${item.getInterfaceId()}"></c:out> : <a href="<c:out value="${item.getUrl()}?inid=${item.getInterfaceId()}"></c:out>">
-                    <c:out value="${item.getName()}"></c:out>
-                </a></h3>            
+            <h3>    
+                <li input="hidden" name="interfaceid" value="${fn:escapeXml(item.getInterfaceId())}">
+                    <c:out value="${item.getInterfaceId()}"></c:out> : <a href="<c:out value="${item.getUrl()}?inid=${item.getInterfaceId()}"></c:out>">
+                        <c:out value="${item.getName()}"></c:out>
+                    </a>s
+                    <c:out value="${item.getInterfaceId()}"></c:out> : <a href="<c:out value="${item.getUrl()}?inid=${item.getInterfaceId()}"></c:out>">
+                        <c:out value="${item.getName()}"></c:out>
+                    </a>
+                </li>
+            </h3>
         </c:forEach>
     </body>
 </html>
