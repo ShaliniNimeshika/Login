@@ -11,6 +11,7 @@ package com.login.bean;
  */
 
 //https://stackoverflow.com/questions/18165786/accessing-url-parameter-using-jstl 
+//https://stackoverflow.com/questions/45949331/how-can-i-pass-values-from-jsp-to-servlet-using-jstl
 
 public class PageBean {
     private String url;
