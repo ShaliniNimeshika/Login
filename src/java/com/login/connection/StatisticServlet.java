@@ -5,8 +5,14 @@
  */
 package com.login.connection;
 
+import com.login.bean.FunctionBean;
+import static com.login.connection.TransferServlet.roleid;
+import com.login.dao.InterfaceDao;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +23,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author shalini_w
  */
 public class StatisticServlet extends HttpServlet {
-
+    static String roleid;
+    static String interfaceid;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -31,7 +38,17 @@ public class StatisticServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        response.sendRedirect("statistic.jsp");
+        roleid = LoginServlet.session.getAttribute("roleid").toString();
+        interfaceid = request.getParameter("index");
+        
+        ArrayList<FunctionBean> fb;
+        try {
+            fb = InterfaceDao.loadFunction(roleid,interfaceid);
+            request.setAttribute("functions", fb);
+            request.getRequestDispatcher("statistic.jsp").forward(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(StatisticServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

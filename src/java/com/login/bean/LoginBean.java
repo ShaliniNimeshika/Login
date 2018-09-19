@@ -13,6 +13,7 @@ public class LoginBean {
     private String username;
     private String password;
     private String role;
+    private String roleid;
     //private Page pages;
     /**
      * @return the username
@@ -41,5 +42,19 @@ public class LoginBean {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * @return the roleid
+     */
+    public String getRoleid() {
+        return roleid;
+    }
+
+    /**
+     * @param roleid the roleid to set
+     */
+    public void setRoleid(String roleid) {
+        this.roleid = roleid;
     }
 }

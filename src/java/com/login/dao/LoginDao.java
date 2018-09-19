@@ -49,9 +49,7 @@ public class LoginDao {
                 roleid = rs.getString("roleid");
                 
                 if (username.equals(unameDB) && password.equals(passwordDB)) {
-//                    System.out.println(unameDB);
-//                    System.out.println(passwordDB);
-//                    System.out.println(roleid);
+                    loginbean.setRoleid(roleid);
                     return roleDB;
                 }
             }             
@@ -65,7 +63,6 @@ public class LoginDao {
 
     public static ArrayList<PageBean> loadPages(){
         ArrayList<PageBean> data = new ArrayList<PageBean>();
-        //String input = role;
         
         try {
             con = DBConnection.createConnection();

@@ -11,17 +11,21 @@ import com.login.dao.LoginDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author shalini_w
  */
 public class LoginServlet extends HttpServlet {
-
+    static HttpSession session = null;
+    static ArrayList<PageBean> al;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -74,6 +78,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        session = request.getSession();
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         
@@ -85,19 +90,21 @@ public class LoginServlet extends HttpServlet {
         loginbean.setPassword(password);
         
         String role = LoginDao.authenticateUser(loginbean);
-       
+        
         if (role.equals("admin") || role.equals("user")) {
-            ArrayList<PageBean> al;
+           
             try {
                 al = LoginDao.loadPages();
 //                for (int i = 0; i < al.size(); i++) {
 //                    System.out.println(al.get(i).getUrl());
 //                }
-                request.setAttribute("al", al);
-                request.setAttribute("uname", username);
-                request.getRequestDispatcher("home.jsp").forward(request, response);
-            } catch (Exception e) {
-                System.out.println("null pointer");
+                request.setAttribute("pages", al);
+                session.setAttribute("uname", username);
+                session.setAttribute("roleid", loginbean.getRoleid());
+                
+                request.getRequestDispatcher("resource/menu.jsp").forward(request, response);
+            } catch (Exception ex) {
+                Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             out.println("Username :" + username);

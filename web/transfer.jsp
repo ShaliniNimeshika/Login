@@ -5,6 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,6 +14,15 @@
         <title>Transfer</title>
     </head>
     <body>
-        <center><h1>TRANSFER</h1></center>
+        <jsp:include page="resource/menu.jsp"></jsp:include>
+        <center><h1>TRANSFER</h1>
+            <br>
+            
+            <c:forEach var="item" items="${functions}">
+                <h3>    
+                    <input type="button"  name="<c:url value="${item.getFunction_url()}?index=${item.getFunction_id()}"></c:url>" value="${item.getFunction_name()}"></input>  
+                </h3>
+            </c:forEach>
+        </center>
     </body>
 </html>

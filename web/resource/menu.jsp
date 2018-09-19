@@ -1,6 +1,6 @@
 <%-- 
-    Document   : home
-    Created on : Sep 17, 2018, 10:53:17 AM
+    Document   : menu
+    Created on : Sep 19, 2018, 3:43:18 PM
     Author     : shalini_w
 --%>
 
@@ -11,11 +11,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Home</title>
+        
     </head>
     <body>
-    <center><h1>Welcome ${uname.toUpperCase()}!</h1></center>
-       
+        <h2>Menu</h2>
         <c:forEach var="item" items="${pages}">
             <br>
             

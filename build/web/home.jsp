@@ -16,17 +16,14 @@
     <body>
     <center><h1>Welcome ${uname.toUpperCase()}!</h1></center>
        
-        <c:forEach var="item" items="${al}">
+        <c:forEach var="item" items="${pages}">
             <br>
+            
             <h3>    
-                <li input="hidden" name="interfaceid" value="${fn:escapeXml(item.getInterfaceId())}">
-                    <c:out value="${item.getInterfaceId()}"></c:out> : <a href="<c:out value="${item.getUrl()}?inid=${item.getInterfaceId()}"></c:out>">
-                        <c:out value="${item.getName()}"></c:out>
-                    </a>s
-                    <c:out value="${item.getInterfaceId()}"></c:out> : <a href="<c:out value="${item.getUrl()}?inid=${item.getInterfaceId()}"></c:out>">
-                        <c:out value="${item.getName()}"></c:out>
-                    </a>
-                </li>
+                    <c:out value="${item.getInterfaceId()}"></c:out> : 
+                        <a href="<c:url value="${item.getUrl()}?index=${item.getInterfaceId()}"></c:url>"> 
+                            <c:out value="${item.getName()}"></c:out>
+                        </a>
             </h3>
         </c:forEach>
     </body>
