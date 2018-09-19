@@ -44,6 +44,7 @@ public class TransferServlet extends HttpServlet {
         try {
             fb = InterfaceDao.loadFunction(roleid,interfaceid);
             request.setAttribute("functions", fb);
+            
             request.getRequestDispatcher("transfer.jsp").forward(request, response);
         } catch (Exception ex) {
             Logger.getLogger(TransferServlet.class.getName()).log(Level.SEVERE, null, ex);

@@ -14,15 +14,22 @@
         <title>Statistics</title>
     </head>
     <body>
-        <%@ include file="resource/menu.jsp" %>
-        <center><h1>STATISTICS</h1>
-            <br>
-            
-            <c:forEach var="item" items="${functions}">
-                <h3>    
-                    <input type="button" name="<c:url value="${item.getFunction_url()}?index=${item.getFunction_id()}"></c:url>" value="${item.getFunction_name()}"></input>  
-                </h3>
-            </c:forEach>
-        </center>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4">
+                    <jsp:include page="resource/menu.jsp"></jsp:include>
+                </div>
+                <div class="col-md-8">
+                    <jsp:include page="resource/header.jsp"></jsp:include>
+                    <h1>STATISTICS</h1>
+                    <br>
+                        <c:forEach var="item" items="${functions}">
+                            <h3>    
+                                <input type="button"  name="<c:url value="${item.getFunction_url()}?index=${item.getFunction_id()}"></c:url>" value="${item.getFunction_name()}"></input>  
+                            </h3>
+                        </c:forEach>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

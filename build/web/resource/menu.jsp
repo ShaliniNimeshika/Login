@@ -14,12 +14,12 @@
         
     </head>
     <body>
+        <a href="home.jsp">Home</a><br>
         <h2>Menu</h2>
         <c:forEach var="item" items="${pages}">
             <br>
-            
             <h3>    
-                    <c:out value="${item.getInterfaceId()}"></c:out> : 
+                <c:out value="${item.getInterfaceId()}"></c:out> : 
                         <a href="<c:url value="${item.getUrl()}?index=${item.getInterfaceId()}"></c:url>"> 
                             <c:out value="${item.getName()}"></c:out>
                         </a>

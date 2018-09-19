@@ -14,17 +14,16 @@
         <title>Home</title>
     </head>
     <body>
-    <center><h1>Welcome ${uname.toUpperCase()}!</h1></center>
-       
-        <c:forEach var="item" items="${pages}">
-            <br>
-            
-            <h3>    
-                    <c:out value="${item.getInterfaceId()}"></c:out> : 
-                        <a href="<c:url value="${item.getUrl()}?index=${item.getInterfaceId()}"></c:url>"> 
-                            <c:out value="${item.getName()}"></c:out>
-                        </a>
-            </h3>
-        </c:forEach>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4">
+                    <jsp:include page="resource/menu.jsp"></jsp:include>
+                </div>
+                <div class="col-md-8">
+                    <jsp:include page="resource/header.jsp"></jsp:include>
+                    <p>Home page</p>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

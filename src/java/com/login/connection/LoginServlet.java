@@ -98,11 +98,11 @@ public class LoginServlet extends HttpServlet {
 //                for (int i = 0; i < al.size(); i++) {
 //                    System.out.println(al.get(i).getUrl());
 //                }
-                request.setAttribute("pages", al);
+                session.setAttribute("pages", al);
                 session.setAttribute("uname", username);
                 session.setAttribute("roleid", loginbean.getRoleid());
                 
-                request.getRequestDispatcher("resource/menu.jsp").forward(request, response);
+                request.getRequestDispatcher("home.jsp").forward(request, response);
             } catch (Exception ex) {
                 Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
