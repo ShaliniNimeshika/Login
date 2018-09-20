@@ -57,4 +57,5 @@ public class LoginBean {
     public void setRoleid(String roleid) {
         this.roleid = roleid;
     }
+
 }

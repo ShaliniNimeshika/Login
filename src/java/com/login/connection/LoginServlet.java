@@ -95,9 +95,7 @@ public class LoginServlet extends HttpServlet {
            
             try {
                 al = LoginDao.loadPages();
-//                for (int i = 0; i < al.size(); i++) {
-//                    System.out.println(al.get(i).getUrl());
-//                }
+                
                 session.setAttribute("pages", al);
                 session.setAttribute("uname", username);
                 session.setAttribute("roleid", loginbean.getRoleid());
