@@ -1,0 +1,23 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Sep 20, 2018, 11:36:29 AM
+    Author     : shalini_w
+*/
+
+.back{
+    background-color: #d9d9d9;
+}
+
+.btn-logout{
+    background-color: #ea123a;
+    color: #ffffff;
+}
+
+.btn-logout a:hover{
+    text-decoration: none;
+    color: #ffffff;
+}

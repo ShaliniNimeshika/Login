@@ -16,12 +16,20 @@
     <body>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <jsp:include page="resource/menu.jsp"></jsp:include>
                 </div>
-                <div class="col-md-8">
-                    <jsp:include page="resource/header.jsp"></jsp:include>
-                    <p>Home page</p>
+                <div class="col-md-10">
+                    <div class="row back">
+                        <jsp:include page="resource/header.jsp"></jsp:include>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-11">
+                            <h1>Home page</h1>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

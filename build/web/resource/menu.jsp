@@ -7,23 +7,38 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<link rel="stylesheet" href="resource/css/menu.css"/>
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        
     </head>
     <body>
-        <a href="home.jsp">Home</a><br>
-        <h2>Menu</h2>
-        <c:forEach var="item" items="${pages}">
-            <br>
-            <h3>    
-                <c:out value="${item.getInterfaceId()}"></c:out> : 
-                        <a href="<c:url value="${item.getUrl()}?index=${item.getInterfaceId()}"></c:url>"> 
-                            <c:out value="${item.getName()}"></c:out>
+        <div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <nav id="spy">
+                <ul class="sidebar-nav nav">
+                    <li>
+                        <a href="home.jsp" class="solo">
+                            <i class="fa fa-dashboard fa-lg"></i>
+                            Home
                         </a>
-            </h3>
-        </c:forEach>
+                    </li>
+                    <c:forEach var="item" items="${pages}">
+                        <li>
+                            <a href="<c:url value="${item.getUrl()}?index=${item.getInterfaceId()}"></c:url>" class="solo">
+                                <i class="fa fa-dashboard fa-lg"></i>
+                                <c:out value="${item.getName()}"></c:out>
+                            </a>
+                        </li>
+                    </c:forEach>
+                           </ul>
+            </nav>
+        </div>
+        </div>
+                 
+       
     </body>
 </html>

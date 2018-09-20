@@ -23,11 +23,14 @@
         <servlet-name>StatisticServlet</servlet-name>
         <servlet-class>com.login.connection.StatisticServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>com.login.connection.LogoutServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/home</url-pattern>
     </servlet-mapping>
-    
     <servlet-mapping>
         <servlet-name>TransferServlet</servlet-name>
         <!--<url-pattern>/transfer?inid=1</url-pattern>-->
@@ -47,6 +50,10 @@
         <servlet-name>StatisticServlet</servlet-name>
         <!--<url-pattern>/statistic?inid=4</url-pattern>-->
         <url-pattern>/statistic</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/LogoutServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
