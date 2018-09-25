@@ -12,6 +12,9 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Transfer</title>
+        
+        
+        
     </head>
     <body>
         <div class="container-fluid">
@@ -32,11 +35,19 @@
                             </div>
                     
                             <div class="row">
-                                <c:forEach var="item" items="${functions}">
-                                    <h3>    
-                                        <input type="button" class="btn btn-primary" name="<c:url value="${item.getFunction_url()}?index=${item.getFunction_id()}"></c:url>" value="${item.getFunction_name()}"></input>  
-                                    </h3>
-                                </c:forEach>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <c:forEach var="item" items="${functions}">
+                                            <div class="col-md-3">
+                                                <h3>    
+                                                    <input type="button" class="btn btn-primary" name="<c:url value="${item.getFunction_url()}?index=${item.getFunction_id()}"></c:url>" value="${item.getFunction_name()}"></input>  
+                                                </h3>
+                                            </div>
+                                        </c:forEach>
+                                    </div>
+                                </div>
+                                <div class="col-md-4"></div>
                             </div>
                         </div>
                     </div>  

@@ -30,9 +30,6 @@
                     </div>
                 </div>  
             </c:when>
-            <c:when test="${uname == null}">
-                <jsp:include page="invalid.jsp"></jsp:include>
-            </c:when>
         </c:choose>
         
     </body>

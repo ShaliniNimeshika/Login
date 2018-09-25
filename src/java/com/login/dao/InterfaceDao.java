@@ -36,11 +36,12 @@ public class InterfaceDao {
         try {
             con = DBConnection.createConnection();
             statement = con.createStatement();
-            String sql = "SELECT f.functionid, f.name, f.url from function f, func_interface fi where fi.roleid='"+roleid+"' and fi.interfaceid='"+interfaceid+"' and f.functionid=fi.functionid";
+            //String sql = "SELECT f.functionid, f.name, fi.url from function f, func_interface fi, privilage p where p.if_id=fi.if_id and p.roleid='"+roleid+"' and fi.interfaceid='"+interfaceid+"' and f.functionid=fi.functionid";
+            String sql = "SELECT f.functionid, f.name, fi.url from function f, func_interface fi, privilage p where p.if_id=fi.if_id and p.roleid='"+roleid+"' and fi.interfaceid='"+interfaceid+"' and f.functionid=fi.functionid";
             rs = statement.executeQuery(sql);
             
             while (rs.next()) { 
-                FunctionBean fb = new FunctionBean(rs.getString("f.functionid"),rs.getString("f.name"),rs.getString("f.url"));
+                FunctionBean fb = new FunctionBean(rs.getString("f.functionid"),rs.getString("f.name"),rs.getString("fi.url"));
                 data.add(fb);
             }
         } catch (SQLException ex) {

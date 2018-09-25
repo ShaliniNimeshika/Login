@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class DBConnection {
     public static Connection createConnection(){
-        String url = "jdbc:mysql://localhost:3306/login";
+        String url = "jdbc:mysql://localhost:3306/login2";
         String username = "root";
         String password = "";
         //String 

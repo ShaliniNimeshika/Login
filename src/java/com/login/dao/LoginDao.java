@@ -67,7 +67,7 @@ public class LoginDao {
         try {
             con = DBConnection.createConnection();
             statement = con.createStatement();
-            String sql = "SELECT i.interfaceid, i.url , i.name from interface i, privilage p where p.roleid='"+roleid+"' and p.interfaceid = i.interfaceid "; 
+            String sql = "SELECT i.interfaceid, i.url, i.name FROM interface i, func_interface fi, privilage p WHERE fi.if_id = p.if_id AND p.pid ='"+roleid+"'"; 
             rs = statement.executeQuery(sql);
             
             while (rs.next()) { 
