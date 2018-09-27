@@ -38,17 +38,7 @@ public class StatisticServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        roleid = LoginServlet.session.getAttribute("roleid").toString();
-        interfaceid = request.getParameter("index");
-        
-        ArrayList<FunctionBean> fb;
-        try {
-            fb = InterfaceDao.loadFunction(roleid,interfaceid);
-            request.setAttribute("functions", fb);
-            request.getRequestDispatcher("statistic.jsp").forward(request, response);
-        } catch (Exception ex) {
-            Logger.getLogger(StatisticServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        doPost(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -63,7 +53,7 @@ public class StatisticServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
     }
 
     /**
@@ -77,7 +67,17 @@ public class StatisticServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        roleid = LoginServlet.session.getAttribute("roleid").toString();
+        interfaceid = request.getParameter("index");
+        
+        ArrayList<FunctionBean> fb;
+        try {
+            fb = InterfaceDao.loadFunction(roleid,interfaceid);
+            request.setAttribute("functions", fb);
+            request.getRequestDispatcher("statistic.jsp").forward(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(StatisticServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

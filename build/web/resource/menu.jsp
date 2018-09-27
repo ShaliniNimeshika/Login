@@ -16,29 +16,36 @@
     </head>
     <body>
         <div id="wrapper">
-        <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <nav id="spy">
-                <ul class="sidebar-nav nav">
-                    <li>
-                        <a href="home.jsp" class="solo">
-                            <i class="fa fa-dashboard fa-lg"></i>
-                            Home
-                        </a>
-                    </li>
-                    <c:forEach var="item" items="${pages}">
+            <!-- Sidebar -->
+            <div id="sidebar-wrapper">
+                <nav id="spy">
+                    <ul class="sidebar-nav nav">
                         <li>
-                            <a href="<c:url value="${item.getUrl()}?index=${item.getInterfaceId()}"></c:url>" class="solo">
+                            <a href="home.jsp" class="solo">
                                 <i class="fa fa-dashboard fa-lg"></i>
-                                <c:out value="${item.getName()}"></c:out>
+                                Home
                             </a>
                         </li>
-                    </c:forEach>
-                           </ul>
-            </nav>
+                        <c:forEach var="item" items="${pages}">
+                            <li>
+                                <form action="${item.getUrl()}" method="post">
+                                    <input type="hidden" name="index" value="${item.getInterfaceId()}">
+                                    <input type="hidden" name="action" value="${item.getName()}">
+                                    
+                                    <button class="solo" type="submit" value="${item.getUrl()}"><i class="fa fa-dashboard fa-lg"></i>${item.getName()}</button>
+                                        
+<!--                                    <a href="<c:url value="${item.getUrl()}"></c:url>" class="solo"><i class="fa fa-dashboard fa-lg"></i>
+                                        <c:out value="${item.getName()}"></c:out>
+                                    </a>-->
+
+                                </form>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </nav>
+            </div>
         </div>
-        </div>
-                 
-       
+
+
     </body>
 </html>

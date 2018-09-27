@@ -35,11 +35,11 @@ public class RoleDao {
         try {
             con = DBConnection.createConnection();
             statement = con.createStatement();
-            String sql = "SELECT rolename from role";
+            String sql = "SELECT * from role";
             rs = statement.executeQuery(sql);
             
             while (rs.next()) { 
-                RoleBean rb = new RoleBean(rs.getString("rolename"));
+                RoleBean rb = new RoleBean(rs.getString("roleid"),rs.getString("rolename"));
                 roles.add(rb);
             }
         } catch (SQLException ex) {

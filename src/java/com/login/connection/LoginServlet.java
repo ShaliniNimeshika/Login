@@ -7,7 +7,9 @@ package com.login.connection;
 
 import com.login.bean.LoginBean;
 import com.login.bean.PageBean;
+import com.login.bean.RoleBean;
 import com.login.dao.LoginDao;
+import com.login.dao.RoleDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -18,14 +20,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.jasper.tagplugins.jstl.core.ForEach;
 
 /**
  *
  * @author shalini_w
  */
 public class LoginServlet extends HttpServlet {
-    static HttpSession session = null;
+
+    public static HttpSession session = null;
     static ArrayList<PageBean> al;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -38,9 +43,9 @@ public class LoginServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         response.sendRedirect("index.jsp");
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -72,29 +77,29 @@ public class LoginServlet extends HttpServlet {
         session = request.getSession();
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        
+
         LoginBean loginbean = new LoginBean();
-        
+
         loginbean.setUsername(username);
         loginbean.setPassword(password);
-        
-        String role = LoginDao.authenticateUser(loginbean);
-        
-        if (role.equals("admin") || role.equals("user")) {
-           
+
+        boolean flag = LoginDao.authenticateUser(loginbean);
+
+        if (flag == true) {
+
             try {
                 al = LoginDao.loadPages();
-                
+
                 session.setAttribute("pages", al);
                 session.setAttribute("uname", username);
-                session.setAttribute("roleid", loginbean.getRoleid());
-                
+//                session.setAttribute("roleid", loginbean.getRoleid());
                 request.getRequestDispatcher("home.jsp").forward(request, response);
             } catch (Exception ex) {
                 Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            request.getRequestDispatcher("invalid.jsp").forward(request, response);
+            System.out.println("Entered username = " + password + " and password = " + username);
+            response.sendRedirect("index.jsp");
         }
     }
 

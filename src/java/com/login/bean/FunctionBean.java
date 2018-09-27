@@ -12,13 +12,11 @@ package com.login.bean;
 public class FunctionBean {
     private String function_id;
     private String function_name;
-    private String function_url;
     
     
-    public FunctionBean(String func_id, String func_name, String func_url) {
+    public FunctionBean(String func_id, String func_name) {
         this.function_id = func_id;
         this.function_name = func_name;
-        this.function_url = func_url;
      }
 
     /**
@@ -35,11 +33,5 @@ public class FunctionBean {
         return function_name;
     }
 
-    /**
-     * @return the function_url
-     */
-    public String getFunction_url() {
-        return function_url;
-    }
     
 }

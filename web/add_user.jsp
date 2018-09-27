@@ -35,25 +35,31 @@
                                 <div class="row">
                                     <div class="col-md-2"></div>
                                     <div class="col-md-5">
-                                        <form class="form-signin" action="add_user" method="post">
-                                            
+                                        <form class="form-signin" action="UserFunctions" method="post">
+
                                             <input type="text" class="form-control" name="username" placeholder="Username" required autofocus>
                                             <div class="row" style="height: 10px;"></div>
                                             <input type="password" class="form-control" name="password" placeholder="Password" required>
                                             <div class="row" style="height: 10px;"></div>
-                                            <input type="radio" name="role" value="1">Admin &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" name="role" value="2" checked="true">User
-                                        <c:forEach var="role" items="${roles}">
-                                            <input type="radio" name="role" value="${role.getRolename()}"><c:out value="${role.getRolename().toUpperCase()}"></c:out>
-                                        </c:forEach>
-                                        <!--                                        <input type="radio" name="role" value="admin">Admin &nbsp;&nbsp;&nbsp;&nbsp;
-                                                                                <input type="radio" name="role" value="user" checked="true">User-->
-                                        <div class="row" style="height: 25px;"></div>
-                                        <button class="btn btn-lg btn-primary btn-block" type="submit" name="Submit" value="Submit">Register</button>
+                                            <c:forEach var="role" items="${roles}">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <input type="radio" name="role" value="${role.getRoleid()}"><c:out value="${role.getRolename().toUpperCase()}"></c:out>
+                                            </c:forEach>
+                                            <div class="row" style="height: 25px;"></div>
+
+                                            <input type="hidden" name="action" value="add_user">
+                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="Submit" value="Submit">Register</button>
+                                        </form>
+                                    </div>
+                                    <div class="col-md-5"></div>
+                                </div>
+                                <div class="row" style="height: 50px;"></div>
+                                <div class="row">
+                                    <form action="user_management" method="post">
+                                        <input type="hidden" name="action" value="New Role">
+                                        <button type="submit" class="btn btn-primary" value="new_role">ADD NEW USER ROLE</button>  
                                     </form>
                                 </div>
-                                <div class="col-md-5"></div>
-                            </div>
                         </div>
                     </div>   
                 </div>

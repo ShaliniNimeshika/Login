@@ -38,9 +38,10 @@
                                     <div class="row">
                                         <c:forEach var="item" items="${functions}">
                                             <div class="col-md-3">
-                                                <h3>    
-                                                    <input type="button" class="btn btn-primary" name="<c:url value="${item.getFunction_url()}?index=${item.getFunction_id()}"></c:url>" value="${item.getFunction_name()}"></input>  
-                                                </h3>
+                                                <form action="user_management" method="post">
+                                                    <input type="hidden" name="action" value="${item.getFunction_name()}">
+                                                    <button type="submit" class="btn btn-primary" value="${item.getFunction_name()}">${item.getFunction_name()}</button>  
+                                                </form>
                                             </div>
                                         </c:forEach>
                                     </div>

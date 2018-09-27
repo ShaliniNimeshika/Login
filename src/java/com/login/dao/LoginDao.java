@@ -7,6 +7,7 @@ package com.login.dao;
 
 import com.login.bean.LoginBean;
 import com.login.bean.PageBean;
+import static com.login.connection.LoginServlet.session;
 import com.login.util.DBConnection;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -28,29 +29,31 @@ public class LoginDao {
     static String role = null;
     static String roleid = null;
     
-    public static String authenticateUser(LoginBean loginbean){
+    public static boolean authenticateUser(LoginBean loginbean){
       
         String unameDB = null;
         String passwordDB = null;
         String roleDB = null;
+//        String roleid = null;
         try {
             String username = loginbean.getUsername();
             String password = loginbean.getPassword();
                  
             con = DBConnection.createConnection();
             statement = con.createStatement();            
-            String sql = "SELECT u.username , u.password , r.rolename , r.roleid from user u , role r where u.userid=r.roleid";
+            String sql = "SELECT u.username , u.password , r.rolename , r.roleid from user u , role r where u.roleid=r.roleid";
             rs = statement.executeQuery(sql);
             
             while (rs.next()) {              
                 unameDB = rs.getString("u.username");
                 passwordDB = rs.getString("u.password");
                 roleDB = rs.getString("r.rolename");
-                roleid = rs.getString("roleid");
+                roleid = rs.getString("r.roleid");
                 
                 if (username.equals(unameDB) && password.equals(passwordDB)) {
                     loginbean.setRoleid(roleid);
-                    return roleDB;
+                    session.setAttribute("roleid", roleid);
+                    return true;
                 }
             }             
         } catch (SQLException ex) {
@@ -58,7 +61,7 @@ public class LoginDao {
         } catch (Exception ex) {
             Logger.getLogger(LoginDao.class.getName()).log(Level.SEVERE, null, ex);
         } 
-        return "invalid";
+        return false;
     }
 
     public static ArrayList<PageBean> loadPages(){
