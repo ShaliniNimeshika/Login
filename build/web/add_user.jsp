@@ -54,12 +54,21 @@
                                     <div class="col-md-5"></div>
                                 </div>
                                 <div class="row" style="height: 50px;"></div>
+                            <c:if test="${roleid == 1}">
                                 <div class="row">
                                     <form action="user_management" method="post">
                                         <input type="hidden" name="action" value="New Role">
                                         <button type="submit" class="btn btn-primary" value="new_role">ADD NEW USER ROLE</button>  
                                     </form>
                                 </div>
+                                <div class="row" style="height: 25px;"></div>
+                                <div class="row">
+                                    <form action="user_management" method="post">
+                                        <input type="hidden" name="action" value="New Interface">
+                                        <button type="submit" class="btn btn-primary" value="new_interface">ADD NEW INTERFACE</button>  
+                                    </form>
+                                </div>
+                            </c:if>
                         </div>
                     </div>   
                 </div>

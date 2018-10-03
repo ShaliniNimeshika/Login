@@ -54,10 +54,10 @@ public class UserDao {
     public static void addUser(String uname, String pwd, String role) {
         String username = uname;
         String password = pwd;
-        String roleid = role;
+        String rid = role;
 
         try {
-            String sql = "INSERT INTO user(roleid,username,password) VALUES ('" + roleid + "','" + username + "','" + password + "')";
+            String sql = "INSERT INTO user(roleid,username,password) VALUES ('" + rid + "','" + username + "','" + password + "')";
             statement2 = con.createStatement();
             statement2.executeUpdate(sql);
         } catch (SQLException ex) {
@@ -79,17 +79,20 @@ public class UserDao {
     }
 
     public static ArrayList<UserBean> loadUserData(String uid) {
-        ArrayList<UserBean> data = new ArrayList<UserBean>();
+        System.out.println("load user data function");
+        ArrayList<UserBean> data = new ArrayList<>();
         String userid = uid;
+        System.out.println("userid in function :"+userid);
         try {
             con = DBConnection.createConnection();
-            statement = con.createStatement();
-            String sql = "SELECT u.username, u.password, r.rolename FROM user u, role r WHERE u.userid='" + userid + "' and u.roleid=r.roleid";
-            rs = statement.executeQuery(sql);
+            Statement update_statement = con.createStatement();
+            String sql = "SELECT u.userid, u.username, u.password, r.rolename FROM user u, role r WHERE u.userid='" + userid + "' and u.roleid=r.roleid";
+            ResultSet result = update_statement.executeQuery(sql);
 
-            while (rs.next()) {
-                UserBean ub = new UserBean(userid, rs.getString("u.username"),rs.getString("u.password"),rs.getString("r.rolename"));
+            while (result.next()) {
+                UserBean ub = new UserBean(result.getString("u.userid"),result.getString("u.username"),result.getString("u.password"),result.getString("r.rolename"));
                 data.add(ub);
+                System.out.println("3:user data loaded successfully");
             }
         } catch (SQLException ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -113,6 +116,29 @@ public class UserDao {
         } catch (SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public static boolean isRegistered(String username) {
+        boolean flag = true;
+        
+        try {
+            String sql = "SELECT COUNT(*) AS num FROM user WHERE username='"+username+"'";
+            Statement stat = con.createStatement();
+            ResultSet result = stat.executeQuery(sql);
+            
+            while (result.next()) {                
+                System.out.println("num is:"+result.getString("num"));
+                
+                if (Integer.parseInt(result.getString("num"))== 0) {
+                    flag = false;
+                    System.out.println("flg in if" + flag);
+                    return flag;
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return flag;
     }
 
 }

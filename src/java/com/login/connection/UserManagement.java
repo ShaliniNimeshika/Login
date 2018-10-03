@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -80,13 +81,13 @@ public class UserManagement extends HttpServlet {
         interfaceid = request.getParameter("index");
         String action = request.getParameter("action");
 //        session1.setAttribute("action", action); 
-        System.out.println("button :" + action);
+//        System.out.println("button :" + action);
         if (action.equals("Add")) {
 
             ArrayList<RoleBean> rb;
             rb = RoleDao.loadRoleName();
             try {
-                request.setAttribute("roles", rb);
+                request.setAttribute("roles",rb);
                 request.getRequestDispatcher("add_user.jsp").forward(request, response);
             } catch (Exception ex) {
                 Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
@@ -97,17 +98,19 @@ public class UserManagement extends HttpServlet {
             delete_user(request, response);
 
         } else if (action.equals("Update")) {
-
+//            System.out.println("1:get action as Update");
             String uid = request.getParameter("userid");
-            ArrayList<RoleBean> rb;
-            rb = RoleDao.loadRoleName();
+//            System.out.println("userid for update :"+uid);
+            
             ArrayList<UserBean> data;
             data = UserDao.loadUserData(uid);
+            
             try {
 
                 request.setAttribute("roles", rb);
                 request.setAttribute("data", data);
                 request.getRequestDispatcher("update_user.jsp").forward(request, response);
+//                System.out.println("4:interface is loaded");
             } catch (Exception ex) {
                 Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -116,19 +119,40 @@ public class UserManagement extends HttpServlet {
 
             System.out.println("try to add new user role");
 
-            ArrayList<RoleBean> rb;
             rb = RoleDao.loadRoleName();
             ArrayList<InterfaceBean> ib;
+            ArrayList<InterfaceBean> interfaces;
             ib = InterfaceDao.loadInterfaceFunctions();
+            interfaces = InterfaceDao.loadAllInterfaces();
             try {
                 LoginServlet.session.setAttribute("funcs", ib);
+                LoginServlet.session.setAttribute("inter", interfaces);
                 request.setAttribute("roles", rb);
                 request.setAttribute("funcs", ib);
+                request.setAttribute("inter", interfaces);
                 request.getRequestDispatcher("add_role.jsp").forward(request, response);
             } catch (Exception ex) {
                 Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+        } else if (action.equals("New Interface")) {
+
+            System.out.println("Adding new page with functions nb");
+            ArrayList<FunctionBean> functions;
+            functions = InterfaceDao.loadAllFunctions();
+            ArrayList<InterfaceBean> inter;
+            inter = InterfaceDao.loadFunctionInterface();
+            try {
+                LoginServlet.session.setAttribute("functions", functions);
+                LoginServlet.session.setAttribute("inter", inter);
+                request.setAttribute("functions", functions);
+//                request.setAttribute("funcs", ib);
+                request.setAttribute("inter", inter);
+                
+                request.getRequestDispatcher("new_page.jsp").forward(request, response);
+            } catch (Exception ex) {
+                Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
 
             rb = RoleDao.loadRoleName();

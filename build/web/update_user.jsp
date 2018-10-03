@@ -57,6 +57,7 @@
                                             </c:forEach>
                                             <input type="hidden" name="action" value="update_user">
                                             <input type="hidden" name="userid" value="${user.getUserid()}">
+                                            <div class="row" style="height: 70px;"></div>
                                             <button class="btn btn-lg btn-primary btn-block" type="submit" name="Submit" value="Submit">Update</button>
                                         </form>
                                     </c:forEach>

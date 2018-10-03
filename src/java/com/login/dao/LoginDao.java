@@ -70,7 +70,7 @@ public class LoginDao {
         try {
             con = DBConnection.createConnection();
             statement = con.createStatement();
-            String sql = "SELECT i.interfaceid, i.url, i.name FROM interface i, func_interface fi, privilage p WHERE fi.if_id = p.if_id AND p.pid ='"+roleid+"'"; 
+            String sql = "SELECT DISTINCT i.interfaceid, i.url, i.name FROM interface i, func_interface fi, privilage p WHERE p.if_id=fi.if_id AND fi.interfaceid=i.interfaceid ANd p.roleid ='"+roleid+"'"; 
             rs = statement.executeQuery(sql);
             
             while (rs.next()) { 
