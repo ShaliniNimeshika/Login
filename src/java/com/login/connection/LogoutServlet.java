@@ -5,6 +5,7 @@
  */
 package com.login.connection;
 
+import com.login.util.Log4jLogger;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpSession;
  * @author shalini_w
  */
 public class LogoutServlet extends HttpServlet {
+
+    Log4jLogger log = new Log4jLogger();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,6 +37,7 @@ public class LogoutServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session != null) {
+            log.getLogger("Logout", "info", LoginServlet.session.getAttribute("uname").toString().toUpperCase(), request);
             session.invalidate();
             request.getRequestDispatcher("/index.jsp").forward(request, response);
         }

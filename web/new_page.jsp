@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="col-md-3"></div>
                             </div>
-                            <div class="row" style="height: 75px;"></div>
+                            
                             <div class="row">
                                 <div class="col-md-1"></div>
                                 <div class="col-md-10">
@@ -85,6 +85,7 @@
                                                 <tr>
                                                     <th>Page ID</th>
                                                     <th>Page Name</th>
+                                                    <th>URL</th>
                                                     <th>Assigned Functions</th>
                                                     <th>Action</th>                                                
                                                 </tr>
@@ -94,6 +95,7 @@
                                                     <tr>
                                                         <td><c:out value="${page.getI_id()}" /></td>
                                                         <td><c:out value="${page.getI_name()}" /></td>
+                                                        <td><c:out value="${page.getI_url()}" /></td>
                                                         <td>
                                                             <c:forEach var="f" items="${page.getFbean()}">
                                                                 
@@ -110,7 +112,7 @@
                                                             <form action="UserFunctions" method="post">
                                                                 <input type="hidden" name="action" value="delete_page">
                                                                 <input type="hidden" name="pageid" value="${page.getI_id()}">
-                                                                <button type="submit" class="btn btn-danger" value="${page.getI_id()}">Delete Page</button>  
+                                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete interface : ${page.getI_name()} ?')" value="${page.getI_id()}">Delete Page</button>  
                                                             </form>
 
                                                         </td>

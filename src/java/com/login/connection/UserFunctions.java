@@ -229,14 +229,17 @@ public class UserFunctions extends HttpServlet {
         try {
             String iid = request.getParameter("pageid");
 
+//            load selected interface details
             ArrayList<InterfaceBean> interface_bean;
             interface_bean = InterfaceDao.loadInterface(iid);
             LoginServlet.session.setAttribute("interface_bean", interface_bean);
 
+//          load all functions in database
             ArrayList<FunctionBean> functions;
             functions = InterfaceDao.loadAllFunctions();
             LoginServlet.session.setAttribute("functions", functions);
 
+//            load the functions of selected interface
             ArrayList<InterfaceBean> inter;
             inter = InterfaceDao.loadFunctionInterface();
             LoginServlet.session.setAttribute("inter", inter);
@@ -274,12 +277,19 @@ public class UserFunctions extends HttpServlet {
     }
 
     private void update_interface(HttpServletRequest request, HttpServletResponse response) {
+        String pageid = request.getParameter("intid");
         String pagename = request.getParameter("pagename");
         String pageurl = request.getParameter("pageurl");
         String pagedesc = request.getParameter("pagedesc");
         String[] functions = request.getParameterValues("functions");
-        //            loadFunctionInterface();  load interface details and assigned functions
-        System.out.println("Update page");
+        
+        //update interface
+        InterfaceDao.updateInterface(pageid,pagename,pageurl,pagedesc);
+        //update privilage
+        InterfaceDao.updatePrivilages(pageid,functions);
+        //update assinged functions
+        
+        
     }
 
     private void delete_interface(HttpServletRequest request, HttpServletResponse response) {
@@ -291,14 +301,17 @@ public class UserFunctions extends HttpServlet {
             ArrayList<PrivilageBean> pbean = new ArrayList<>();
             pbean = InterfaceDao.findPrivilageID(ibean);
             
+            //delete privilages assigned for the interface
             InterfaceDao.deletePrivilages(pbean);
             
             System.out.println("privilages deleted successfully");
             
+            //delete functions assigned for the interface
             InterfaceDao.deleteInterfaceFunction(ibean);
             
             System.out.println("functions of interface deleted successfully");
             
+            //delete interface
             InterfaceDao.deleteInterface(iid);
             
             System.out.println("interface deleted successfully");

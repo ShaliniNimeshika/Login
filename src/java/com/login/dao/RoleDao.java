@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  */
 public class RoleDao {
 
-    static Connection con = null;
+    static Connection con = DBConnection.createConnection();
     static Statement statement = null;
     static ResultSet rs = null;
     static String role = null;
@@ -33,7 +33,7 @@ public class RoleDao {
         ArrayList<RoleBean> roles = new ArrayList<RoleBean>();
         
         try {
-            con = DBConnection.createConnection();
+//            con = DBConnection.createConnection();
             statement = con.createStatement();
             String sql = "SELECT * from role";
             rs = statement.executeQuery(sql);

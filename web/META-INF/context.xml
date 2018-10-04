@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/Login">
+   <Resource name="jdbc/login2"
+        auth = "Container"
+        type = "javax.sql.DataSource"
+        maxActive = "25"
+        madIdle = "5"
+        maxWait = "10000"
+        username = "root"
+        password = ""
+        driverClassName = "com.mysql.jdbc.Driver"       
+        url="jdbc:mysql://localhost:3306/login2?useSSL=false"/>
    
 
 </Context>

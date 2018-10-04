@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
  */
 public class UserDao {
 
-    static Connection con = null;
+    static Connection con = DBConnection.createConnection();
     static Statement statement = null;
     static Statement statement2 = null;
     static ResultSet rs = null;
@@ -34,7 +34,7 @@ public class UserDao {
         ArrayList<UserBean> user = new ArrayList<UserBean>();
 
         try {
-            con = DBConnection.createConnection();
+//            con = DBConnection.createConnection();
             statement = con.createStatement();
             String sql = "SELECT u.userid, u.username, r.rolename FROM user u, role r WHERE u.roleid=r.roleid";
             rs = statement.executeQuery(sql);
@@ -84,7 +84,7 @@ public class UserDao {
         String userid = uid;
         System.out.println("userid in function :"+userid);
         try {
-            con = DBConnection.createConnection();
+//            con = DBConnection.createConnection();
             Statement update_statement = con.createStatement();
             String sql = "SELECT u.userid, u.username, u.password, r.rolename FROM user u, role r WHERE u.userid='" + userid + "' and u.roleid=r.roleid";
             ResultSet result = update_statement.executeQuery(sql);

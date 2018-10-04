@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  */
 public class InterfaceDao {
 
-    static Connection con = null;
+    static Connection con = DBConnection.createConnection();
     static Statement statement = null;
     static Statement statement2 = null;
     static Statement statement3 = null;
@@ -41,7 +41,7 @@ public class InterfaceDao {
         roleid = (String) LoginServlet.session.getAttribute("roleid");
 
         try {
-            con = DBConnection.createConnection();
+//            con = DBConnection.createConnection();
             statement = con.createStatement();
             String sql = "SELECT f.functionid, f.name from function f, func_interface fi, privilage p where p.if_id=fi.if_id and p.roleid='" + roleid + "' and fi.interfaceid='" + interfaceid + "' and f.functionid=fi.functionid";
             rs = statement.executeQuery(sql);
@@ -62,7 +62,7 @@ public class InterfaceDao {
         ArrayList<InterfaceBean> data = new ArrayList<>();
 
         try {
-            con = DBConnection.createConnection();
+//            con = DBConnection.createConnection();
             statement = con.createStatement();
             String sql = "SELECT fi.if_id,i.interfaceid,i.name,f.functionid,f.name FROM interface i, function f, func_interface fi WHERE i.interfaceid=fi.interfaceid AND f.functionid=fi.functionid";
             rs = statement.executeQuery(sql);
@@ -376,5 +376,33 @@ public class InterfaceDao {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public static void updateInterface(String pageid, String pagename, String pageurl, String pagedesc) {
+        try {
+            String iid = pageid;
+            String iname = pagename;
+            String iurl = pageurl;
+            String idesc = pagedesc;
+            
+            String sql = "UPDATE interface SET name='"+iname+"',description='"+idesc+"' WHERE interfaceid='"+iid+"'";
+            statement2 = con.createStatement();
+            statement2.executeUpdate(sql);
+        } catch (SQLException ex) {
+            Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void updatePrivilages(String pageid, String[] functions) {
+        String iid = pageid;
+        String[] new_fid = functions;
+        
+        //get if_id of all old func_interface
+        
+        
+    }
+
+    
+
+    
 
 }

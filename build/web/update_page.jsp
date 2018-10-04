@@ -46,7 +46,7 @@
                                                 <tr style="width: 10px;"></tr>
                                                 <tr>
                                                     <td>Page URL&nbsp;&nbsp;</td>
-                                                    <td><input type="text" class="form-control" name="pageurl" value="${iface.getI_url()}" required style="width: 300px;" ></td>
+                                                    <td><input type="text" class="form-control" name="pageurl" value="${iface.getI_url()}" required style="width: 300px;" disabled="true" ></td>
                                                 </tr>
                                                 <tr style="width: 10px;"></tr>
                                                 <tr>
@@ -81,6 +81,7 @@
                                             <div class="row" style="height: 25px;"></div>
 
                                             <input type="hidden" name="action" value="update_interface">
+                                            <input type="hidden" name="intid" value="${iface.getI_id()}">
                                             <button class="btn btn-lg btn-primary btn-block" type="submit" name="Submit" value="Submit" style="width: 100px;">Update</button>
                                         </form>
                                     </c:forEach>

@@ -68,7 +68,7 @@
                                                             <form action="user_management" method="post">
                                                                 <input type="hidden" name="action" value="${item.getFunction_name()}">
                                                                 <input type="hidden" name="userid" value="${user.getUserid()}">
-                                                                <button type="submit" class="btn btn-danger" value="${item.getFunction_name()}">${item.getFunction_name()}</button>  
+                                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete user : ${user.getUsername()} ?')" value="${item.getFunction_name()}">${item.getFunction_name()}</button>  
                                                             </form>
                                                         </c:if>
                                                     </c:forEach>

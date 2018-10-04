@@ -43,12 +43,20 @@
                                                 <tr>
                                                     <th>Role ID</th>
                                                     <th>Role Name</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             <c:forEach var="role" items="${roles}">
                                                 <tr>
                                                     <td><c:out value="${role.getRoleid()}"></c:out></td>
                                                     <td><c:out value="${role.getRolename()}"></c:out></td>
-                                                    </tr>
+                                                    <td>
+                                                        <form  action="UserFunctions" method="post">
+                                                            <input type="hidden" name="action" value="update_role">
+                                                            <input type="hidden" name="roleid" value="${role.getRoleid()}">
+                                                            <button type="submit" class="btn btn-success" value="${role.getRoleid()}">Update</button>  
+                                                        </form>
+                                                    </td>
+                                                </tr>
                                             </c:forEach>
                                         </table>
                                     </div>
@@ -64,15 +72,15 @@
                                         <div class="row" style="height: 25px;"></div>
 
                                         <c:forEach var="in" items="${inter}">
-                                           
+
                                             <div class="dropdown">
                                                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" style="float: left; margin-left: 10px;"><c:out value="${in.getI_name()}"></c:out><span class="caret"></span></button>    
-                                                <ul class="dropdown-menu" style="margin-top: 30px; inline-box-align: inherit;">
+                                                    <ul class="dropdown-menu" style="margin-top: 30px; inline-box-align: inherit;">
                                                     <c:forEach var="func" items="${funcs}">
                                                         <c:if test="${func.getI_name()==in.getI_name()}">
                                                             <li><input type="checkbox" name="func" value="${func.getIf_id()}"/>&nbsp;<c:out value="${func.getF_name()}"></c:out></li>
-                                                        </c:if>
-                                                    </c:forEach>
+                                                            </c:if>
+                                                        </c:forEach>
                                                 </ul>
                                             </div>
                                         </c:forEach>

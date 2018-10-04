@@ -10,6 +10,7 @@ import com.login.bean.PageBean;
 import com.login.bean.RoleBean;
 import com.login.dao.LoginDao;
 import com.login.dao.RoleDao;
+import com.login.util.Log4jLogger;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class LoginServlet extends HttpServlet {
 
     public static HttpSession session = null;
     static ArrayList<PageBean> al;
-
+    Log4jLogger log = new Log4jLogger();
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -94,11 +95,14 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("uname", username);
 //                session.setAttribute("roleid", loginbean.getRoleid());
                 request.getRequestDispatcher("home.jsp").forward(request, response);
+                
+                log.getLogger("System Log".toUpperCase(), "info", username, request);
             } catch (Exception ex) {
                 Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            System.out.println("Entered username = " + password + " and password = " + username);
+            
+            log.getLogger("unauthorized Login Attempt".toUpperCase(), "warn", username, request);
             response.sendRedirect("index.jsp");
         }
     }
