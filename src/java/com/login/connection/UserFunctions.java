@@ -11,8 +11,6 @@ import com.login.bean.PageBean;
 import com.login.bean.PrivilageBean;
 import com.login.bean.RoleBean;
 import com.login.bean.UserBean;
-import com.login.connection.LoginServlet;
-import static com.login.connection.LoginServlet.al;
 import com.login.dao.InterfaceDao;
 import com.login.dao.LoginDao;
 import com.login.dao.RoleDao;
@@ -20,6 +18,7 @@ import com.login.dao.UserDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -143,7 +142,6 @@ public class UserFunctions extends HttpServlet {
         String role = request.getParameter("role");
 
         boolean flag = UserDao.isRegistered(username);
-//        System.out.println("isRegistered :" + flag);
         if (flag == false) {
             UserDao.addUser(username, password, role);
             System.out.println("data added successfully");
@@ -156,14 +154,6 @@ public class UserFunctions extends HttpServlet {
             LoginServlet.session.setAttribute("roles", rb);
             response.sendRedirect("add_user.jsp");
         }
-//        
-//        UserDao.addUser(username, password, role);
-//        System.out.println("data added successfully");
-//
-//        ub = UserDao.loadAllUsers();
-//        LoginServlet.session.setAttribute("users", ub);
-//        response.sendRedirect("user_management.jsp");
-
     }
 
     private void update_user(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -211,7 +201,7 @@ public class UserFunctions extends HttpServlet {
         ArrayList<InterfaceBean> interfaces;
         ArrayList<InterfaceBean> ib;
         ArrayList<PageBean> al;
-        
+
         rb = RoleDao.loadRoleName();
         ib = InterfaceDao.loadInterfaceFunctions();
         interfaces = InterfaceDao.loadAllInterfaces();
@@ -277,19 +267,41 @@ public class UserFunctions extends HttpServlet {
     }
 
     private void update_interface(HttpServletRequest request, HttpServletResponse response) {
-        String pageid = request.getParameter("intid");
-        String pagename = request.getParameter("pagename");
-        String pageurl = request.getParameter("pageurl");
-        String pagedesc = request.getParameter("pagedesc");
-        String[] functions = request.getParameterValues("functions");
-        
-        //update interface
-        InterfaceDao.updateInterface(pageid,pagename,pageurl,pagedesc);
-        //update privilage
-        InterfaceDao.updatePrivilages(pageid,functions);
-        //update assinged functions
-        
-        
+        try {
+            String pageid = request.getParameter("intid");
+            String pagename = request.getParameter("pagename");
+            String pageurl = request.getParameter("pageurl");
+            String pagedesc = request.getParameter("pagedesc");
+            String[] functions = request.getParameterValues("functions");
+
+            ArrayList<FunctionBean> oldfunctions = InterfaceDao.loadOldFunctions(pageid);
+            
+            
+            ArrayList<FunctionBean> newfunctions = new ArrayList<>();
+            for (int i = 0; i < functions.length; i++) {
+                FunctionBean fb = new FunctionBean(functions[i]);
+                newfunctions.add(fb);
+            }
+
+//                    InterfaceDao.deleteFIFunction(flags[i][1],pageid);
+//                    InterfaceDao.insertFIFunction(flags[i][2],pageid);
+
+            //update interface info
+//            InterfaceDao.updateInterface(pageid, pagename, pageurl, pagedesc);
+
+            //load new_page.jsp
+            ArrayList<FunctionBean> funcs;
+            funcs = InterfaceDao.loadAllFunctions();
+            ArrayList<InterfaceBean> inter;
+            inter = InterfaceDao.loadFunctionInterface();
+
+            LoginServlet.session.setAttribute("functions", funcs);
+            LoginServlet.session.setAttribute("inter", inter);
+
+            response.sendRedirect("new_page.jsp");
+        } catch (IOException ex) {
+            Logger.getLogger(UserFunctions.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void delete_interface(HttpServletRequest request, HttpServletResponse response) {
@@ -297,40 +309,41 @@ public class UserFunctions extends HttpServlet {
             String iid = request.getParameter("pageid");
             ArrayList<InterfaceBean> ibean = new ArrayList<>();
             ibean = InterfaceDao.findInterfaceFunctionID(iid);
-            
+
             ArrayList<PrivilageBean> pbean = new ArrayList<>();
             pbean = InterfaceDao.findPrivilageID(ibean);
-            
+
             //delete privilages assigned for the interface
             InterfaceDao.deletePrivilages(pbean);
-            
+
             System.out.println("privilages deleted successfully");
-            
+
             //delete functions assigned for the interface
             InterfaceDao.deleteInterfaceFunction(ibean);
-            
+
             System.out.println("functions of interface deleted successfully");
-            
+
             //delete interface
             InterfaceDao.deleteInterface(iid);
-            
+
             System.out.println("interface deleted successfully");
-            
+
             ArrayList<FunctionBean> functions;
             functions = InterfaceDao.loadAllFunctions();
             ArrayList<InterfaceBean> inter;
             inter = InterfaceDao.loadFunctionInterface();
             ArrayList<PageBean> al;
             al = LoginDao.loadPages();
-            
+
             LoginServlet.session.setAttribute("pages", al);
             LoginServlet.session.setAttribute("functions", functions);
             LoginServlet.session.setAttribute("inter", inter);
-            
+
             response.sendRedirect("new_page.jsp");
         } catch (IOException ex) {
             Logger.getLogger(UserFunctions.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
+
     }
+
 }

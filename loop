@@ -1,0 +1,36 @@
+package com.test;
+
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public class test {
+	public static void main(String args[]) {
+		List<String> a = new CopyOnWriteArrayList<String>();
+		List<String> b = new CopyOnWriteArrayList<String>();
+		
+		a.add("1");
+		a.add("2");
+		a.add("3");
+		a.add("4");
+		
+		b.add("2");
+		b.add("3");
+		b.add("5");
+		b.add("1");
+		
+		for(String x: a) {
+			for(String y: b) {
+				if(x.equals(y)) {
+					a.remove(x);
+					b.remove(y);
+				}
+			}
+		}
+		for(String p: a) {
+			for(String q: b) {
+				System.out.println("x-"+p+" y-"+q);
+			}
+		}
+	}
+}
+

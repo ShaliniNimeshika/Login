@@ -39,7 +39,7 @@
 
                                             <input type="text" class="form-control" name="username" placeholder="Username" required autofocus>
                                             <div class="row" style="height: 10px;"></div>
-                                            <input type="password" class="form-control" name="password" placeholder="Password" required>
+                                            <input type="password" class="form-control" name="password" placeholder="Password" minlength="6" required>
                                             <div class="row" style="height: 10px;"></div>
                                             <c:forEach var="role" items="${roles}">
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

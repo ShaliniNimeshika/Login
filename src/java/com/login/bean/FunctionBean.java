@@ -33,5 +33,9 @@ public class FunctionBean {
         return function_name;
     }
 
+    public FunctionBean(String function_id) {
+        this.function_id = function_id;
+    }
+
     
 }

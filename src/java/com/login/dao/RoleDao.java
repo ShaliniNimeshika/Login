@@ -6,8 +6,6 @@
 package com.login.dao;
 
 import com.login.bean.RoleBean;
-import com.login.bean.UserBean;
-import static com.login.dao.UserDao.con;
 import com.login.util.DBConnection;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -23,7 +21,6 @@ import java.util.logging.Logger;
  */
 public class RoleDao {
 
-    static Connection con = DBConnection.createConnection();
     static Statement statement = null;
     static ResultSet rs = null;
     static String role = null;
@@ -31,9 +28,9 @@ public class RoleDao {
     
     public static ArrayList<RoleBean> loadRoleName() {
         ArrayList<RoleBean> roles = new ArrayList<RoleBean>();
-        
+        Connection con = DBConnection.createConnection();
         try {
-//            con = DBConnection.createConnection();
+
             statement = con.createStatement();
             String sql = "SELECT * from role";
             rs = statement.executeQuery(sql);
@@ -46,6 +43,12 @@ public class RoleDao {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RoleDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         return roles;

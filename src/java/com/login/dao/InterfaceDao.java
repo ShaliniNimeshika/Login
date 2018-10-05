@@ -7,10 +7,8 @@ package com.login.dao;
 
 import com.login.bean.FunctionBean;
 import com.login.bean.InterfaceBean;
-import com.login.bean.PageBean;
 import com.login.bean.PrivilageBean;
 import com.login.connection.LoginServlet;
-import static com.login.dao.LoginDao.con;
 import com.login.util.DBConnection;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -26,10 +24,10 @@ import java.util.logging.Logger;
  */
 public class InterfaceDao {
 
-    static Connection con = DBConnection.createConnection();
     static Statement statement = null;
     static Statement statement2 = null;
     static Statement statement3 = null;
+    static Statement statement4 = null;
     static ResultSet rs = null;
     static ResultSet rs2 = null;
     static String interfaceid = null;
@@ -39,9 +37,9 @@ public class InterfaceDao {
         ArrayList<FunctionBean> data = new ArrayList<>();
         interfaceid = inid;
         roleid = (String) LoginServlet.session.getAttribute("roleid");
-
+        Connection con = DBConnection.createConnection();
         try {
-//            con = DBConnection.createConnection();
+
             statement = con.createStatement();
             String sql = "SELECT f.functionid, f.name from function f, func_interface fi, privilage p where p.if_id=fi.if_id and p.roleid='" + roleid + "' and fi.interfaceid='" + interfaceid + "' and f.functionid=fi.functionid";
             rs = statement.executeQuery(sql);
@@ -54,15 +52,20 @@ public class InterfaceDao {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return data;
     }
 
     public static ArrayList<InterfaceBean> loadInterfaceFunctions() {
         ArrayList<InterfaceBean> data = new ArrayList<>();
-
+        Connection con = DBConnection.createConnection();
         try {
-//            con = DBConnection.createConnection();
             statement = con.createStatement();
             String sql = "SELECT fi.if_id,i.interfaceid,i.name,f.functionid,f.name FROM interface i, function f, func_interface fi WHERE i.interfaceid=fi.interfaceid AND f.functionid=fi.functionid";
             rs = statement.executeQuery(sql);
@@ -75,6 +78,12 @@ public class InterfaceDao {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return data;
     }
@@ -83,6 +92,7 @@ public class InterfaceDao {
         String[] selected = selection;
         String rname = rolename;
         String rid = null;
+        Connection con = DBConnection.createConnection();
         try {
             String role_sql = "INSERT INTO role(rolename) VALUES ('" + rname + "')";
             statement = con.createStatement();
@@ -106,11 +116,18 @@ public class InterfaceDao {
             System.out.println("privilage added successfully");
         } catch (SQLException ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
     public static ArrayList<InterfaceBean> loadAllInterfaces() {
         ArrayList<InterfaceBean> interfaces = new ArrayList<>();
+        Connection con = DBConnection.createConnection();
         try {
             String sql = "SELECT * FROM interface";
             statement = con.createStatement();
@@ -123,13 +140,19 @@ public class InterfaceDao {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return interfaces;
     }
 
     public static ArrayList<FunctionBean> loadAllFunctions() {
-
+        Connection con = DBConnection.createConnection();
         ArrayList<FunctionBean> functions = new ArrayList<>();
         try {
             String sql = "SELECT * FROM function";
@@ -143,6 +166,12 @@ public class InterfaceDao {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return functions;
@@ -154,7 +183,7 @@ public class InterfaceDao {
         String pdesc = pagedesc;
         String funcs[] = functions;
         String iid = null;
-
+        Connection con = DBConnection.createConnection();
         try {
             String page_sql = "INSERT INTO interface(name,url,description) VALUES ('" + pname + "','" + purl + "','" + pdesc + "')";
             statement = con.createStatement();
@@ -184,12 +213,18 @@ public class InterfaceDao {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
     private static void addAdminPrivilage(String iid) {
         String inid = iid;
-
+        Connection con = DBConnection.createConnection();
         try {
             String sql = "SELECT if_id from func_interface WHERE interfaceid='" + inid + "'";
             statement = con.createStatement();
@@ -203,11 +238,18 @@ public class InterfaceDao {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
     public static ArrayList<InterfaceBean> loadFunctionInterface() {
         ArrayList<InterfaceBean> ibean = new ArrayList<>();
+        Connection con = DBConnection.createConnection();
         try {
             String i_name;
             String i_id;
@@ -243,6 +285,12 @@ public class InterfaceDao {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return ibean;
@@ -251,7 +299,7 @@ public class InterfaceDao {
     public static ArrayList<InterfaceBean> loadInterface(String iid) {
         String ifaceid = iid;
         ArrayList<InterfaceBean> ibean = new ArrayList<>();
-
+        Connection con = DBConnection.createConnection();
         try {
 
             String iname;
@@ -281,6 +329,12 @@ public class InterfaceDao {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return ibean;
@@ -288,7 +342,7 @@ public class InterfaceDao {
 
     public static ArrayList<InterfaceBean> findInterfaceFunctionID(String iid) {
         ArrayList<InterfaceBean> ibean = new ArrayList<>();
-
+        Connection con = DBConnection.createConnection();
         try {
             String sql = "SELECT if_id from func_interface WHERE interfaceid='" + iid + "'";
             statement = con.createStatement();
@@ -301,6 +355,12 @@ public class InterfaceDao {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return ibean;
@@ -309,7 +369,7 @@ public class InterfaceDao {
     public static ArrayList<PrivilageBean> findPrivilageID(ArrayList<InterfaceBean> ibean) {
         ArrayList<PrivilageBean> pbean = new ArrayList<>();
         ArrayList<InterfaceBean> ib = ibean;
-
+        Connection con = DBConnection.createConnection();
         for (int i = 0; i < ib.size(); i++) {
             try {
                 InterfaceBean get = ib.get(i);
@@ -324,6 +384,12 @@ public class InterfaceDao {
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
 
@@ -331,6 +397,7 @@ public class InterfaceDao {
     }
 
     public static void deletePrivilages(ArrayList<PrivilageBean> pbean) {
+        Connection con = DBConnection.createConnection();
         try {
             ArrayList<PrivilageBean> pb = pbean;
 
@@ -344,10 +411,17 @@ public class InterfaceDao {
             }
         } catch (SQLException ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
     public static void deleteInterfaceFunction(ArrayList<InterfaceBean> ibean) {
+        Connection con = DBConnection.createConnection();
         try {
             ArrayList<InterfaceBean> ib = ibean;
 
@@ -361,10 +435,17 @@ public class InterfaceDao {
             }
         } catch (SQLException ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
     public static void deleteInterface(String iid) {
+        Connection con = DBConnection.createConnection();
         try {
             String inid = iid;
 
@@ -374,35 +455,135 @@ public class InterfaceDao {
 
         } catch (SQLException ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
     public static void updateInterface(String pageid, String pagename, String pageurl, String pagedesc) {
+        Connection con = DBConnection.createConnection();
         try {
             String iid = pageid;
             String iname = pagename;
             String iurl = pageurl;
             String idesc = pagedesc;
-            
-            String sql = "UPDATE interface SET name='"+iname+"',description='"+idesc+"' WHERE interfaceid='"+iid+"'";
+
+            String sql = "UPDATE interface SET name='" + iname + "',description='" + idesc + "' WHERE interfaceid='" + iid + "'";
             statement2 = con.createStatement();
             statement2.executeUpdate(sql);
         } catch (SQLException ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
     public static void updatePrivilages(String pageid, String[] functions) {
         String iid = pageid;
         String[] new_fid = functions;
-        
+        Connection con = DBConnection.createConnection();
         //get if_id of all old func_interface
-        
-        
     }
 
-    
+    public static ArrayList<FunctionBean> loadOldFunctions(String pageid) {
+        ArrayList<FunctionBean> fbean = new ArrayList<>();
+        Connection con = DBConnection.createConnection();
+        try {
 
-    
+            String sql2 = "select DISTINCT f.functionid, f.name from function f, func_interface fi where fi.functionid=f.functionid and fi.interfaceid='" + pageid + "'";
+            statement2 = con.createStatement();
+            rs2 = statement2.executeQuery(sql2);
+            while (rs2.next()) {
+                FunctionBean fb = new FunctionBean(rs2.getString("f.functionid"), rs2.getString("f.name"));
+                fbean.add(fb);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return fbean;
+    }
+
+    public static void deleteFIFunction(String func, String pageid) {
+        Connection con = DBConnection.createConnection();
+        try {
+            String iid = pageid;
+            String fid = func;
+            String ifid = "";
+            //search for if_id
+            String sql = "SELECT DISTINCT if_id from func_interface WHERE interfaceid='" + iid + "' and functionid='" + fid + "'";
+            statement = con.createStatement();
+            rs = statement.executeQuery(sql);
+
+            while (rs.next()) {
+                ifid = rs.getString("if_id");
+            }
+
+            //search for privilages
+            String sql2 = "SELECT DISTINCT pid from privilage WHERE if_id='" + ifid + "'";
+            statement2 = con.createStatement();
+            rs2 = statement2.executeQuery(sql2);
+
+            while (rs2.next()) {
+                String pid = rs2.getString("pid");
+                
+                //delete privilage 
+                String sql3 = "DELETE FROM privilage WHERE pid='" + pid + "'";
+                statement3 = con.createStatement();
+                statement3.executeUpdate(sql3);
+                System.out.println("delete pid:" + pid);
+            }
+            String sql4 = "DELETE FROM func_interface WHERE if_id='" + ifid + "'";
+            statement4 = con.createStatement();
+            statement4.executeUpdate(sql4);
+            System.out.println("delete function if_id:"+ifid);
+        } catch (SQLException ex) {
+            Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public static void insertFIFunction(String newF, String pageid) {
+        String iid = pageid;
+        String fid = newF;
+        Connection con = DBConnection.createConnection();
+        
+        try {
+            String sql = "INSERT INTO func_interface(interfaceid,functionid) VALUES ('" + iid + "','" + fid + "')";
+            statement = con.createStatement();
+            statement.executeUpdate(sql);
+            System.out.println("insert new function for interface:"+iid);
+        } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 
 }

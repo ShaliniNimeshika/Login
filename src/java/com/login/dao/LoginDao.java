@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  */
 public class LoginDao {
 
-    static Connection con = DBConnection.createConnection();
+    
     static Statement statement = null;
     static ResultSet rs = null;
     static String role = null;
@@ -31,16 +31,13 @@ public class LoginDao {
     
 
     public static boolean authenticateUser(LoginBean loginbean) {
-
+        Connection con = DBConnection.createConnection();
         String unameDB = null;
         String passwordDB = null;
         String roleDB = null;
-//        String roleid = null;
         try {
             String username = loginbean.getUsername();
             String password = loginbean.getPassword();
-
-//            con = DBConnection.createConnection();
             
             statement = con.createStatement();
             String sql = "SELECT u.username , u.password , r.rolename , r.roleid from user u , role r where u.roleid=r.roleid";
@@ -62,13 +59,19 @@ public class LoginDao {
             Logger.getLogger(LoginDao.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(LoginDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(LoginDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return false;
     }
 
     public static ArrayList<PageBean> loadPages() {
         ArrayList<PageBean> data = new ArrayList<PageBean>();
-
+        Connection con = DBConnection.createConnection();
         try {
 //            con = DBConnection.createConnection();
             statement = con.createStatement();
@@ -84,6 +87,12 @@ public class LoginDao {
             Logger.getLogger(LoginDao.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(LoginDao.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(LoginDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return data;

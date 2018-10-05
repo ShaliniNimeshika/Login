@@ -7,7 +7,6 @@ package com.login.dao;
 
 import com.login.bean.UserBean;
 import com.login.util.DBConnection;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +14,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -23,7 +21,6 @@ import javax.swing.JOptionPane;
  */
 public class UserDao {
 
-    static Connection con = DBConnection.createConnection();
     static Statement statement = null;
     static Statement statement2 = null;
     static ResultSet rs = null;
@@ -32,9 +29,9 @@ public class UserDao {
 
     public static ArrayList<UserBean> loadAllUsers() {
         ArrayList<UserBean> user = new ArrayList<UserBean>();
-
+        Connection con = DBConnection.createConnection();
         try {
-//            con = DBConnection.createConnection();
+
             statement = con.createStatement();
             String sql = "SELECT u.userid, u.username, r.rolename FROM user u, role r WHERE u.roleid=r.roleid";
             rs = statement.executeQuery(sql);
@@ -47,6 +44,12 @@ public class UserDao {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return user;
     }
@@ -55,26 +58,38 @@ public class UserDao {
         String username = uname;
         String password = pwd;
         String rid = role;
-
+        Connection con = DBConnection.createConnection();
         try {
             String sql = "INSERT INTO user(roleid,username,password) VALUES ('" + rid + "','" + username + "','" + password + "')";
             statement2 = con.createStatement();
             statement2.executeUpdate(sql);
         } catch (SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }
 
     public static void deleteUser(String uid) {
         String userid = uid;
-
+        Connection con = DBConnection.createConnection();
         try {
             String sql = "DELETE FROM user WHERE userid='" + userid + "'";
             statement2 = con.createStatement();
             statement2.executeUpdate(sql);
         } catch (SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -83,8 +98,8 @@ public class UserDao {
         ArrayList<UserBean> data = new ArrayList<>();
         String userid = uid;
         System.out.println("userid in function :"+userid);
+        Connection con = DBConnection.createConnection();
         try {
-//            con = DBConnection.createConnection();
             Statement update_statement = con.createStatement();
             String sql = "SELECT u.userid, u.username, u.password, r.rolename FROM user u, role r WHERE u.userid='" + userid + "' and u.roleid=r.roleid";
             ResultSet result = update_statement.executeQuery(sql);
@@ -98,6 +113,12 @@ public class UserDao {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return data;
@@ -108,19 +129,25 @@ public class UserDao {
         String uname = username;
         String pwd = password;
         String rid = roleid;
-
+        Connection con = DBConnection.createConnection();
         try {
             String sql = "UPDATE user SET roleid='"+rid+"',username='"+uname+"',password='"+pwd+"' WHERE userid='"+uid+"'";
             statement2 = con.createStatement();
             statement2.executeUpdate(sql);
         } catch (SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
     public static boolean isRegistered(String username) {
         boolean flag = true;
-        
+        Connection con = DBConnection.createConnection();
         try {
             String sql = "SELECT COUNT(*) AS num FROM user WHERE username='"+username+"'";
             Statement stat = con.createStatement();
@@ -137,6 +164,12 @@ public class UserDao {
             }
         } catch (Exception ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return flag;
     }

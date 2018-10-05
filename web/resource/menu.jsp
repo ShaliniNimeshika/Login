@@ -22,7 +22,7 @@
                     <ul class="sidebar-nav nav">
                         <li>
                             <a href="home.jsp">
-                                <button class="solo" type="submit" style="width: 80%" value="home"><i class="fa fa-dashboard fa-lg"></i>Home</button>
+                                <button class="solo" type="submit" style="width: 80%;" value="home"><i class="fa fa-dashboard fa-lg"></i>Home</button>
                             </a>  
                         </li>
                         <c:forEach var="item" items="${pages}">
@@ -31,7 +31,7 @@
                                     <input type="hidden" name="index" value="${item.getInterfaceId()}">
                                     <input type="hidden" name="action" value="${item.getName()}">
                                     
-                                    <button class="solo" type="submit" style="width: 80%" value="${item.getUrl()}"><i class="fa fa-dashboard fa-lg"></i>${item.getName()}</button>
+                                    <button class="solo" type="submit" style="width: 80%; height: 80px;" value="${item.getUrl()}"><i class="fa fa-dashboard fa-lg"></i>${item.getName()}</button>
                                         
 
                                 </form>
