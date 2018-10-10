@@ -6,10 +6,8 @@
 package com.login.connection;
 
 import com.login.bean.FunctionBean;
-import static com.login.connection.TransferServlet.roleid;
 import com.login.dao.InterfaceDao;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -16,8 +16,8 @@ import com.login.dao.LoginDao;
 import com.login.dao.RoleDao;
 import com.login.dao.UserDao;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,18 +50,7 @@ public class UserFunctions extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet UserFunction</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet UserFunction at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -123,7 +112,7 @@ public class UserFunctions extends HttpServlet {
 
             delete_interface(request, response);
 
-        }
+        } 
     }
 
     /**
@@ -140,10 +129,13 @@ public class UserFunctions extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String role = request.getParameter("role");
+        String actStatus = request.getParameter("activeStatus");
+        String status = "0";
+        String duration = request.getParameter("duration");
 
         boolean flag = UserDao.isRegistered(username);
         if (flag == false) {
-            UserDao.addUser(username, password, role);
+            UserDao.addUser(username, password, role, actStatus, status, duration);
             System.out.println("data added successfully");
 
             ub = UserDao.loadAllUsers();
@@ -159,10 +151,11 @@ public class UserFunctions extends HttpServlet {
     private void update_user(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String roleid = request.getParameter("role");
+        String rid = request.getParameter("role");
         String userid = request.getParameter("userid");
+        String status = request.getParameter("activeStatus");
 
-        UserDao.updateUser(userid, username, password, roleid);
+        UserDao.updateUser(userid, username, password, rid, status);
         System.out.println("user updated successfully");
 
         ub = UserDao.loadAllUsers();
@@ -178,14 +171,17 @@ public class UserFunctions extends HttpServlet {
 
         ArrayList<InterfaceBean> interfaces;
         ArrayList<InterfaceBean> ib;
+        ArrayList<RoleBean> alldata;
 
         rb = RoleDao.loadRoleName();
         ib = InterfaceDao.loadInterfaceFunctions();
         interfaces = InterfaceDao.loadAllInterfaces();
+        alldata = InterfaceDao.loadUserFunctions();
 
         LoginServlet.session.setAttribute("roles", rb);
         LoginServlet.session.setAttribute("funcs", ib);
         LoginServlet.session.setAttribute("inter", interfaces);
+        LoginServlet.session.setAttribute("alldata", alldata);
 
         response.sendRedirect("add_role.jsp");
     }
@@ -274,21 +270,58 @@ public class UserFunctions extends HttpServlet {
             String pagedesc = request.getParameter("pagedesc");
             String[] functions = request.getParameterValues("functions");
 
-            ArrayList<FunctionBean> oldfunctions = InterfaceDao.loadOldFunctions(pageid);
-            
-            
-            ArrayList<FunctionBean> newfunctions = new ArrayList<>();
-            for (int i = 0; i < functions.length; i++) {
-                FunctionBean fb = new FunctionBean(functions[i]);
-                newfunctions.add(fb);
+            List<FunctionBean> oldfunctions = InterfaceDao.loadOldFunctions(pageid);
+            String[] old = new String[oldfunctions.size()];
+
+            for (int i = 0; i < oldfunctions.size(); i++) {
+                old[i] = oldfunctions.get(i).getFunction_id();
             }
 
-//                    InterfaceDao.deleteFIFunction(flags[i][1],pageid);
-//                    InterfaceDao.insertFIFunction(flags[i][2],pageid);
+            List<String> newfuncs = new CopyOnWriteArrayList<>();
+            List<String> oldfuncs = new CopyOnWriteArrayList<>();
 
+            for (String old1 : old) {
+                oldfuncs.add(old1);
+            }
+
+            for (String function : functions) {
+                newfuncs.add(function);
+            }
+
+            System.out.println("data from db:");
+            for (String old1 : old) {
+                System.out.println(old1);
+            }
+
+            System.out.println("\ndata from UI:");
+
+            for (String function : functions) {
+                System.out.println(function);
+            }
+            
+            
+            for(String x: oldfuncs) {
+			for(String y: newfuncs) {
+				if(x.equals(y)) {
+					oldfuncs.remove(x);
+					newfuncs.remove(y);
+				}
+			}
+		}
+            
+            System.out.println("\n rest data from db:");
+            for (String old1 : oldfuncs) {
+                InterfaceDao.deleteFIFunction(old1,pageid);
+            }
+
+            System.out.println("\nrest data from UI:");
+
+            for (String function : newfuncs) {
+                InterfaceDao.insertFIFunction(function,pageid);
+            }
+            
             //update interface info
-//            InterfaceDao.updateInterface(pageid, pagename, pageurl, pagedesc);
-
+            InterfaceDao.updateInterface(pageid, pagename, pageurl, pagedesc);
             //load new_page.jsp
             ArrayList<FunctionBean> funcs;
             funcs = InterfaceDao.loadAllFunctions();
@@ -345,5 +378,6 @@ public class UserFunctions extends HttpServlet {
         }
 
     }
+
 
 }

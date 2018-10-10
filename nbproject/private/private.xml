@@ -3,11 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Projects/Sample%20Projects/Login/src/java/com/login/dao/InterfaceDao.java</file>
-            <file>file:/D:/Projects/Sample%20Projects/Login/loop</file>
+            <file>file:/D:/Projects/Sample%20Projects/Login/src/java/com/login/connection/LoginServlet.java</file>
+            <file>file:/D:/Projects/Sample%20Projects/Login/src/java/com/login/connection/PasswordServlet.java</file>
             <file>file:/D:/Projects/Sample%20Projects/Login/src/java/com/login/connection/UserFunctions.java</file>
-            <file>file:/D:/Projects/Sample%20Projects/Login/web/update_page.jsp</file>
-            <file>file:/D:/Projects/Sample%20Projects/Login/web/new_page.jsp</file>
+            <file>file:/D:/Projects/Sample%20Projects/Login/src/java/com/login/dao/LoginDao.java</file>
+            <file>file:/D:/Projects/Sample%20Projects/Login/web/WEB-INF/web.xml</file>
+            <file>file:/D:/Projects/Sample%20Projects/Login/src/java/com/login/dao/PasswordDao.java</file>
+            <file>file:/D:/Projects/Sample%20Projects/Login/src/java/com/login/connection/UserManagement.java</file>
+            <file>file:/D:/Projects/Sample%20Projects/Login/web/password_reset.jsp</file>
+            <file>file:/D:/Projects/Sample%20Projects/Login/src/java/com/login/util/LoginFilter.java</file>
         </group>
     </open-files>
 </project-private>

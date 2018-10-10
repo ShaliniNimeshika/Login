@@ -7,15 +7,17 @@ package com.login.connection;
 
 import com.login.bean.LoginBean;
 import com.login.bean.PageBean;
-import com.login.bean.RoleBean;
 import com.login.dao.LoginDao;
-import com.login.dao.RoleDao;
 import com.login.util.Log4jLogger;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.util.converter.LocalDateStringConverter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +33,7 @@ public class LoginServlet extends HttpServlet {
     public static HttpSession session = null;
     static ArrayList<PageBean> al;
     Log4jLogger log = new Log4jLogger();
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -44,8 +47,7 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        response.sendRedirect("index.jsp");
-
+        //response.sendRedirect("index.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -86,21 +88,50 @@ public class LoginServlet extends HttpServlet {
         boolean flag = LoginDao.authenticateUser(loginbean);
 
         if (flag == true) {
-
             try {
-                al = LoginDao.loadPages();
+                String reset = LoginDao.getResetStatus(loginbean);
+                System.out.println("reset value:" + reset);
+                if (reset.equals("0")) {
+                    request.setAttribute("username", username);
+                    request.setAttribute("password", password);
+                    request.getRequestDispatcher("password_reset.jsp").forward(request, response);
+                } else {
+                    int reset_duration = LoginDao.getResetDuration(loginbean);
+                    String reset_date = LoginDao.getResetTime(loginbean);
+                    
+                    //get today date
+                    LocalDate today = LocalDate.now();
+                    System.out.println("today:"+today);
+                    System.out.println("last day in string:"+reset_date);
+                    
+                    //get the last reset date into localdate object
+                    LocalDate last_reset = LocalDate.parse(reset_date);
 
-                session.setAttribute("pages", al);
-                session.setAttribute("uname", username);
+                    //calculate the interval days between today and last reset day
+                    int intervalDays = (int) ChronoUnit.DAYS.between(last_reset, today);
+
+                    //if the interval exceed the reset_duration user should reset password to login
+                    if (reset_duration <= intervalDays) {
+                        request.setAttribute("username", username);
+                        request.setAttribute("password", password);
+                        request.getRequestDispatcher("password_reset.jsp").forward(request, response);
+                    } else {
+                        al = LoginDao.loadPages();
+
+                        session.setAttribute("pages", al);
+                        session.setAttribute("uname", username);
 //                session.setAttribute("roleid", loginbean.getRoleid());
-                request.getRequestDispatcher("home.jsp").forward(request, response);
-                
-                log.getLogger("System Log".toUpperCase(), "info", username, request);
+                        request.getRequestDispatcher("home.jsp").forward(request, response);
+
+                        log.getLogger("System Log".toUpperCase(), "info", username, request);
+                    }
+
+                }
             } catch (Exception ex) {
                 Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            
+
             log.getLogger("unauthorized Login Attempt".toUpperCase(), "warn", username, request);
             response.sendRedirect("index.jsp");
         }

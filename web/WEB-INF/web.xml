@@ -39,7 +39,10 @@
         <servlet-name>UserFunctions</servlet-name>
         <servlet-class>com.login.connection.UserFunctions</servlet-class>
     </servlet>
-
+    <servlet>
+        <servlet-name>PasswordServlet</servlet-name>
+        <servlet-class>com.login.connection.PasswordServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/home</url-pattern>
@@ -80,16 +83,17 @@
         <servlet-name>UserFunctions</servlet-name>
         <url-pattern>/UserFunctions</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>PasswordServlet</servlet-name>
+        <url-pattern>/reset_password</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
-    
     <resource-ref>
         <description>DB Connection</description>
         <res-ref-name>jdbc/login2</res-ref-name>
         <res-type>javax.sql.DataSource</res-type>
         <res-auth>Container</res-auth>
     </resource-ref>
-    
 </web-app>

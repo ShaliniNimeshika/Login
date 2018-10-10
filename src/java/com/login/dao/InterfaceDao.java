@@ -8,6 +8,7 @@ package com.login.dao;
 import com.login.bean.FunctionBean;
 import com.login.bean.InterfaceBean;
 import com.login.bean.PrivilageBean;
+import com.login.bean.RoleBean;
 import com.login.connection.LoginServlet;
 import com.login.util.DBConnection;
 import java.sql.Connection;
@@ -24,12 +25,6 @@ import java.util.logging.Logger;
  */
 public class InterfaceDao {
 
-    static Statement statement = null;
-    static Statement statement2 = null;
-    static Statement statement3 = null;
-    static Statement statement4 = null;
-    static ResultSet rs = null;
-    static ResultSet rs2 = null;
     static String interfaceid = null;
     static String roleid = null;
 
@@ -40,9 +35,9 @@ public class InterfaceDao {
         Connection con = DBConnection.createConnection();
         try {
 
-            statement = con.createStatement();
+            Statement statement = con.createStatement();
             String sql = "SELECT f.functionid, f.name from function f, func_interface fi, privilage p where p.if_id=fi.if_id and p.roleid='" + roleid + "' and fi.interfaceid='" + interfaceid + "' and f.functionid=fi.functionid";
-            rs = statement.executeQuery(sql);
+            ResultSet rs = statement.executeQuery(sql);
 
             while (rs.next()) {
                 FunctionBean fb = new FunctionBean(rs.getString("f.functionid"), rs.getString("f.name"));
@@ -66,9 +61,9 @@ public class InterfaceDao {
         ArrayList<InterfaceBean> data = new ArrayList<>();
         Connection con = DBConnection.createConnection();
         try {
-            statement = con.createStatement();
+            Statement statement = con.createStatement();
             String sql = "SELECT fi.if_id,i.interfaceid,i.name,f.functionid,f.name FROM interface i, function f, func_interface fi WHERE i.interfaceid=fi.interfaceid AND f.functionid=fi.functionid";
-            rs = statement.executeQuery(sql);
+            ResultSet rs = statement.executeQuery(sql);
 
             while (rs.next()) {
                 InterfaceBean ib = new InterfaceBean(rs.getString("fi.if_id"), rs.getString("i.name"), rs.getString("f.name"));
@@ -95,14 +90,14 @@ public class InterfaceDao {
         Connection con = DBConnection.createConnection();
         try {
             String role_sql = "INSERT INTO role(rolename) VALUES ('" + rname + "')";
-            statement = con.createStatement();
+            Statement statement = con.createStatement();
             statement.executeUpdate(role_sql);
 
             System.out.println("new user role added successfully");
 
             String sql = "SELECT roleid from role where rolename='" + rname + "'";
-            statement2 = con.createStatement();
-            rs = statement.executeQuery(sql);
+            Statement statement2 = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 rid = rs.getString("roleid");
             }
@@ -110,7 +105,7 @@ public class InterfaceDao {
 
             for (int i = 0; i < selected.length; i++) {
                 String selection_sql = "INSERT INTO privilage(roleid,if_id) VALUES ('" + rid + "','" + selected[i] + "')";
-                statement3 = con.createStatement();
+                Statement statement3 = con.createStatement();
                 statement3.executeUpdate(selection_sql);
             }
             System.out.println("privilage added successfully");
@@ -130,8 +125,8 @@ public class InterfaceDao {
         Connection con = DBConnection.createConnection();
         try {
             String sql = "SELECT * FROM interface";
-            statement = con.createStatement();
-            rs = statement.executeQuery(sql);
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 InterfaceBean in = new InterfaceBean(rs.getString("interfaceid"), rs.getString("name"), rs.getString("url"), rs.getString("description"));
                 interfaces.add(in);
@@ -156,8 +151,8 @@ public class InterfaceDao {
         ArrayList<FunctionBean> functions = new ArrayList<>();
         try {
             String sql = "SELECT * FROM function";
-            statement = con.createStatement();
-            rs = statement.executeQuery(sql);
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 FunctionBean func = new FunctionBean(rs.getString("functionid"), rs.getString("name"));
                 functions.add(func);
@@ -186,14 +181,14 @@ public class InterfaceDao {
         Connection con = DBConnection.createConnection();
         try {
             String page_sql = "INSERT INTO interface(name,url,description) VALUES ('" + pname + "','" + purl + "','" + pdesc + "')";
-            statement = con.createStatement();
+            Statement statement = con.createStatement();
             statement.executeUpdate(page_sql);
 
             System.out.println("new page added successfully");
 
             String sql = "SELECT interfaceid from interface where name='" + pname + "'";
-            statement2 = con.createStatement();
-            rs = statement.executeQuery(sql);
+            Statement statement2 = con.createStatement();
+            ResultSet rs = statement2.executeQuery(sql);
             while (rs.next()) {
                 iid = rs.getString("interfaceid");
             }
@@ -201,7 +196,7 @@ public class InterfaceDao {
 
             for (int i = 0; i < funcs.length; i++) {
                 String selection_sql = "INSERT INTO func_interface(interfaceid,functionid) VALUES ('" + iid + "','" + funcs[i] + "')";
-                statement3 = con.createStatement();
+                Statement statement3 = con.createStatement();
                 statement3.executeUpdate(selection_sql);
             }
             System.out.println("functions added successfully");
@@ -227,11 +222,11 @@ public class InterfaceDao {
         Connection con = DBConnection.createConnection();
         try {
             String sql = "SELECT if_id from func_interface WHERE interfaceid='" + inid + "'";
-            statement = con.createStatement();
-            rs = statement.executeQuery(sql);
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 String sql2 = "INSERT INTO privilage(roleid,if_id) values('" + roleid + "','" + rs.getString("if_id") + "')";
-                statement2 = con.createStatement();
+                Statement statement2 = con.createStatement();
                 statement2.executeUpdate(sql2);
             }
         } catch (SQLException ex) {
@@ -257,8 +252,8 @@ public class InterfaceDao {
             String i_desc;
 
             String sql = "SELECT DISTINCT i.interfaceid,i.name,i.url,i.description FROM interface i";
-            statement = con.createStatement();
-            rs = statement.executeQuery(sql);
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
 
             while (rs.next()) {
                 i_id = rs.getString("i.interfaceid");
@@ -268,12 +263,10 @@ public class InterfaceDao {
                 ArrayList<FunctionBean> fbean = new ArrayList<>();
 
                 String sql2 = "SELECT DISTINCT f.functionid, f.name FROM function f, func_interface fi WHERE fi.interfaceid='" + i_id + "' AND f.functionid=fi.functionid";
-                statement2 = con.createStatement();
-                rs2 = statement2.executeQuery(sql2);
+                Statement statement2 = con.createStatement();
+                ResultSet rs2 = statement2.executeQuery(sql2);
 
                 while (rs2.next()) {
-                    //System.out.println(i_name + "\n");
-                    //System.out.println(rs2.getString("f.functionid") + " and " + rs2.getString("f.name"));
                     FunctionBean fb = new FunctionBean(rs2.getString("f.functionid"), rs2.getString("f.name"));
                     fbean.add(fb);
                 }
@@ -306,8 +299,8 @@ public class InterfaceDao {
             String idesc;
             String iurl;
             String sql = "SELECT * FROM interface WHERE interfaceid='" + ifaceid + "'";
-            statement = con.createStatement();
-            rs = statement.executeQuery(sql);
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 ArrayList<FunctionBean> fbean = new ArrayList<>();
                 iname = rs.getString("name");
@@ -315,8 +308,8 @@ public class InterfaceDao {
                 idesc = rs.getString("description");
 
                 String sql2 = "select DISTINCT f.functionid, f.name from function f, func_interface fi where fi.functionid=f.functionid and fi.interfaceid='" + ifaceid + "'";
-                statement2 = con.createStatement();
-                rs2 = statement2.executeQuery(sql2);
+                Statement statement2 = con.createStatement();
+                ResultSet rs2 = statement2.executeQuery(sql2);
                 while (rs2.next()) {
                     FunctionBean fb = new FunctionBean(rs2.getString("f.functionid"), rs2.getString("f.name"));
                     fbean.add(fb);
@@ -345,8 +338,8 @@ public class InterfaceDao {
         Connection con = DBConnection.createConnection();
         try {
             String sql = "SELECT if_id from func_interface WHERE interfaceid='" + iid + "'";
-            statement = con.createStatement();
-            rs = statement.executeQuery(sql);
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 InterfaceBean ib = new InterfaceBean(rs.getString("if_id"));
                 ibean.add(ib);
@@ -375,8 +368,8 @@ public class InterfaceDao {
                 InterfaceBean get = ib.get(i);
 
                 String sql = "SELECT pid from privilage WHERE if_id='" + get.getIf_id() + "'";
-                statement = con.createStatement();
-                rs = statement.executeQuery(sql);
+                Statement statement = con.createStatement();
+                ResultSet rs = statement.executeQuery(sql);
 
                 while (rs.next()) {
                     PrivilageBean pb = new PrivilageBean(rs.getString("pid"));
@@ -405,7 +398,7 @@ public class InterfaceDao {
                 PrivilageBean get = pb.get(i);
 
                 String sql = "DELETE FROM privilage WHERE pid='" + get.getPid() + "'";
-                statement2 = con.createStatement();
+                Statement statement2 = con.createStatement();
                 statement2.executeUpdate(sql);
 
             }
@@ -429,7 +422,7 @@ public class InterfaceDao {
                 InterfaceBean get = ib.get(i);
 
                 String sql = "DELETE FROM func_interface WHERE if_id='" + get.getIf_id() + "'";
-                statement2 = con.createStatement();
+                Statement statement2 = con.createStatement();
                 statement2.executeUpdate(sql);
 
             }
@@ -450,7 +443,7 @@ public class InterfaceDao {
             String inid = iid;
 
             String sql = "DELETE FROM interface WHERE interfaceid='" + inid + "'";
-            statement2 = con.createStatement();
+            Statement statement2 = con.createStatement();
             statement2.executeUpdate(sql);
 
         } catch (SQLException ex) {
@@ -473,7 +466,7 @@ public class InterfaceDao {
             String idesc = pagedesc;
 
             String sql = "UPDATE interface SET name='" + iname + "',description='" + idesc + "' WHERE interfaceid='" + iid + "'";
-            statement2 = con.createStatement();
+            Statement statement2 = con.createStatement();
             statement2.executeUpdate(sql);
         } catch (SQLException ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -499,8 +492,8 @@ public class InterfaceDao {
         try {
 
             String sql2 = "select DISTINCT f.functionid, f.name from function f, func_interface fi where fi.functionid=f.functionid and fi.interfaceid='" + pageid + "'";
-            statement2 = con.createStatement();
-            rs2 = statement2.executeQuery(sql2);
+            Statement statement2 = con.createStatement();
+            ResultSet rs2 = statement2.executeQuery(sql2);
             while (rs2.next()) {
                 FunctionBean fb = new FunctionBean(rs2.getString("f.functionid"), rs2.getString("f.name"));
                 fbean.add(fb);
@@ -529,8 +522,8 @@ public class InterfaceDao {
             String ifid = "";
             //search for if_id
             String sql = "SELECT DISTINCT if_id from func_interface WHERE interfaceid='" + iid + "' and functionid='" + fid + "'";
-            statement = con.createStatement();
-            rs = statement.executeQuery(sql);
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
 
             while (rs.next()) {
                 ifid = rs.getString("if_id");
@@ -538,22 +531,22 @@ public class InterfaceDao {
 
             //search for privilages
             String sql2 = "SELECT DISTINCT pid from privilage WHERE if_id='" + ifid + "'";
-            statement2 = con.createStatement();
-            rs2 = statement2.executeQuery(sql2);
+            Statement statement2 = con.createStatement();
+            ResultSet rs2 = statement2.executeQuery(sql2);
 
             while (rs2.next()) {
                 String pid = rs2.getString("pid");
-                
+
                 //delete privilage 
                 String sql3 = "DELETE FROM privilage WHERE pid='" + pid + "'";
-                statement3 = con.createStatement();
+                Statement statement3 = con.createStatement();
                 statement3.executeUpdate(sql3);
                 System.out.println("delete pid:" + pid);
             }
             String sql4 = "DELETE FROM func_interface WHERE if_id='" + ifid + "'";
-            statement4 = con.createStatement();
+            Statement statement4 = con.createStatement();
             statement4.executeUpdate(sql4);
-            System.out.println("delete function if_id:"+ifid);
+            System.out.println("delete function if_id:" + ifid);
         } catch (SQLException ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -569,21 +562,78 @@ public class InterfaceDao {
         String iid = pageid;
         String fid = newF;
         Connection con = DBConnection.createConnection();
-        
+
         try {
             String sql = "INSERT INTO func_interface(interfaceid,functionid) VALUES ('" + iid + "','" + fid + "')";
-            statement = con.createStatement();
+            Statement statement = con.createStatement();
             statement.executeUpdate(sql);
-            System.out.println("insert new function for interface:"+iid);
+            System.out.println("insert new function for interface:" + iid);
         } catch (SQLException ex) {
-                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
-            }finally{
+            Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
             try {
                 con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    public static ArrayList<RoleBean> loadUserFunctions() {
+        ArrayList<RoleBean> rbean = new ArrayList<>();
+        Connection con = DBConnection.createConnection();
+
+        try {
+            String sql1 = "SELECT * FROM role";
+            Statement statement1 = con.createStatement();
+            ResultSet rs1 = statement1.executeQuery(sql1);
+
+            while (rs1.next()) {
+                String rid = rs1.getString("roleid");
+                String rname = rs1.getString("rolename");
+
+                String sql2 = "select distinct i.interfaceid, i.name from interface i, func_interface fi, privilage p where p.roleid='"+rid+"' and p.if_id=fi.if_id";
+                Statement statement2 = con.createStatement();
+                ResultSet rs2 = statement2.executeQuery(sql2);
+                ArrayList<InterfaceBean> ibean = new ArrayList<>();
+                while (rs2.next()) {
+                    String iid = rs2.getString("i.interfaceid");
+                    String iname = rs2.getString("i.name");
+
+                    String sql3 = "select distinct f.functionid, f.name from function f, interface i, func_interface fi, privilage p where p.roleid='"+rid+"' and i.interfaceid = '"+iid+"' and fi.functionid=f.functionid and fi.if_id=p.if_id";
+                    Statement statement3 = con.createStatement();
+                    ResultSet rs3 = statement3.executeQuery(sql3);
+                    ArrayList<FunctionBean> fbean = new ArrayList<>();
+                    
+                    while (rs3.next()) {                        
+                        String fid = rs3.getString("f.functionid");
+                        String fname = rs3.getString("f.name");
+                        
+                        FunctionBean fb = new FunctionBean(fid, fname);
+                        fbean.add(fb);
+                    }
+                    InterfaceBean ib = new InterfaceBean(iid, iname, fbean);
+                    ibean.add(ib);
+                }
+
+                RoleBean rb = new RoleBean(rname, rid, ibean);
+                rbean.add(rb);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        String sql5 = "";
+        Statement statement5;
+        ResultSet rs5;
+
+        return rbean;
     }
 
 }

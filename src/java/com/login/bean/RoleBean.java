@@ -5,6 +5,8 @@
  */
 package com.login.bean;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author shalini_w
@@ -12,6 +14,22 @@ package com.login.bean;
 public class RoleBean {
     private String rolename;
     private String roleid;
+    private ArrayList<PrivilageBean> pbean;
+    private ArrayList<InterfaceBean> ibean;
+
+    public ArrayList<InterfaceBean> getIbean() {
+        return ibean;
+    }
+
+    public ArrayList<PrivilageBean> getPbean() {
+        return pbean;
+    }
+
+    public RoleBean(String rolename, String roleid, ArrayList<InterfaceBean> ibean) {
+        this.rolename = rolename;
+        this.roleid = roleid;
+        this.ibean = ibean;
+    }
     
     public RoleBean(String roleid,String rolename){
         this.roleid = roleid;

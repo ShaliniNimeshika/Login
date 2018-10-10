@@ -55,6 +55,18 @@
                                                     </c:otherwise>
                                                 </c:choose>
                                             </c:forEach>
+                                            <div class="row" style="height: 10px;"></div>
+                                            <c:if test="${user.getActive()=='1'}">
+                                                <input type="checkbox" name="activeStatus" value="1" checked="true">&nbsp;Activate&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <input type="checkbox" name="activeStatus" value="0">&nbsp;Deactivate
+                                            </c:if>
+                                            <c:if test="${user.getActive()=='0'}">
+                                                <input type="checkbox" name="activeStatus" value="1">&nbsp;Activate&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <input type="checkbox" name="activeStatus" value="0" checked="true">&nbsp;Deactivate
+                                            </c:if>
+                                            <div class="row" style="height: 10px;"></div>
+                                            <input type="number" name="duration" min="0">
+                                            
                                             <input type="hidden" name="action" value="update_user">
                                             <input type="hidden" name="userid" value="${user.getUserid()}">
                                             <div class="row" style="height: 70px;"></div>

@@ -35,20 +35,33 @@
                                 </div>
                                 <div class="row" style="height: 35px;"></div>
                                 <div class="row">
-                                    <div class="col-md-2"></div>
-                                    <div class="col-md-5">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-10">
                                         <div class="row">
                                             <table class="table">
                                                 <caption><h3>List of Roles</h3></caption>
                                                 <tr>
                                                     <th>Role ID</th>
                                                     <th>Role Name</th>
+                                                    <th>Accessible Interface & Functions</th>
                                                     <th>Action</th>
                                                 </tr>
-                                            <c:forEach var="role" items="${roles}">
+                                            <c:forEach var="role" items="${alldata}">
                                                 <tr>
                                                     <td><c:out value="${role.getRoleid()}"></c:out></td>
                                                     <td><c:out value="${role.getRolename()}"></c:out></td>
+                                                    <td>
+                                                    
+                                                        <c:forEach var="intf" items="${role.getIbean()}">
+                                                            <strong><c:out value="${intf.getI_name()}"></c:out></strong>
+                                                            <br>
+                                                            <c:forEach var="func" items="${intf.getFbean()}">
+                                                                <c:out value="${func.getFunction_name()}"></c:out>&nbsp;
+                                                            </c:forEach>
+                                                                <br>
+                                                        </c:forEach>
+                                                    
+                                                    </td>
                                                     <td>
                                                         <form  action="UserFunctions" method="post">
                                                             <input type="hidden" name="action" value="update_role">
@@ -61,7 +74,7 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="col-md-5"></div>
+                                <div class="col-md-1"></div>
                             </div>
                             <div class="row" style="height: 35px;"></div>
                             <div class="row">

@@ -36,83 +36,89 @@
                                     <h1>USER MANAGEMENT</h1>
                                 </div>
                                 <div class="row" style="height: 40px;"
-                                <div class="row">
-                                    <div class="col-md-2"></div>
-                                    <div class="col-md-8">
-                                        <table class="table" id="Table">
-                                            <caption><h3>List of Users</h3></caption>
-                                            <thead>
-                                            <tr>
-                                                <th>User ID</th>
-                                                <th>User Name</th>
-                                                <th>Role</th>
-                                                <th>Action</th>                                                
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                        <c:forEach var="user" items="${users}">
-                                            <tr>
-                                                <td><c:out value="${user.getUserid()}" /></td>
-                                                <td><c:out value="${user.getUsername()}" /></td>
-                                                <td><c:out value="${user.getUrole()}" /></td> 
-                                                <td>
-                                                    <c:forEach var="item" items="${functions}">
-                                                        <c:if test="${item.getFunction_name()=='Update'}">
-                                                            <form action="user_management" method="post">
-                                                                <input type="hidden" name="action" value="${item.getFunction_name()}">
-                                                                <input type="hidden" name="userid" value="${user.getUserid()}">
-                                                                <button type="submit" class="btn btn-success" value="${item.getFunction_name()}">${item.getFunction_name()}</button>  
-                                                            </form>
-                                                        </c:if>
-                                                        <c:if test="${item.getFunction_name()=='Delete'}">
-                                                            <form action="user_management" method="post">
-                                                                <input type="hidden" name="action" value="${item.getFunction_name()}">
-                                                                <input type="hidden" name="userid" value="${user.getUserid()}">
-                                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete user : ${user.getUsername()} ?')" value="${item.getFunction_name()}">${item.getFunction_name()}</button>  
-                                                            </form>
-                                                        </c:if>
-                                                    </c:forEach>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
+                                     <div class="row">
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-9">
+                                            <table class="table" id="Table">
+                                                <caption><h3>List of Users</h3></caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>User ID</th>
+                                                        <th>User Name</th>
+                                                        <th>Role</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                <c:forEach var="user" items="${users}">
+                                                    <tr>
+                                                        <td><c:out value="${user.getUserid()}" /></td>
+                                                        <td><c:out value="${user.getUsername()}" /></td>
+                                                        <td><c:out value="${user.getUrole()}" /></td> 
+                                                        <td>
+                                                            <c:if test="${user.getActive()=='1'}">Active</c:if>
+                                                            <c:if test="${user.getActive()=='0'}">Deactive</c:if>
+                                                        </td>
+                                                        <td>
+                                                            <c:forEach var="item" items="${functions}">
+                                                                <c:if test="${item.getFunction_name()=='Update'}">
+                                                                    <form action="user_management" method="post">
+                                                                        <input type="hidden" name="action" value="${item.getFunction_name()}">
+                                                                        <input type="hidden" name="userid" value="${user.getUserid()}">
+                                                                        <button type="submit" class="btn btn-success" value="${item.getFunction_name()}">${item.getFunction_name()}</button>  
+                                                                    </form>
+                                                                </c:if>
+                                                                <c:if test="${item.getFunction_name()=='Delete'}">
+                                                                    <form action="user_management" method="post">
+                                                                        <input type="hidden" name="action" value="${item.getFunction_name()}">
+                                                                        <input type="hidden" name="userid" value="${user.getUserid()}">
+                                                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete user : ${user.getUsername()} ?')" value="${item.getFunction_name()}">${item.getFunction_name()}</button>  
+                                                                    </form>
+                                                                </c:if>
+                                                            </c:forEach>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
                                             </tbody>
-                                    </table>
-                                </div>
-                                <div class="col-md-2"></div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-4"></div>
-                                <div class="col-md-4">
-                                    <div class="row">
-
-                                        <c:forEach var="item" items="${functions}">
-                                            <div class="col-md-6">
-                                                <c:if test="${item.getFunction_name()=='Add'}">
-                                                    <form action="user_management" method="post">
-                                                        <input type="hidden" name="action" value="${item.getFunction_name()}">
-                                                        <button type="submit" class="btn btn-primary" value="${item.getFunction_name()}">${item.getFunction_name()}</button>  
-                                                    </form>
-                                                </c:if>
-
-
-                                                <c:if test="${item.getFunction_name()=='Search'}">
-                                                    <form action="user_management" method="post">
-                                                        <input type="hidden" name="action" value="${item.getFunction_name()}">
-                                                        <button type="submit" class="btn btn-primary" value="${item.getFunction_name()}">${item.getFunction_name()}</button>  
-                                                    </form>
-                                                </c:if>
-                                            </div>
-                                        </c:forEach>
+                                        </table>
                                     </div>
+                                    <div class="col-md-2"></div>
                                 </div>
-                                <div class="col-md-4"></div>
+
+                                <div class="row">
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-7">
+                                        <div class="row">
+
+                                            <c:forEach var="item" items="${functions}">
+                                                <div class="col-md-6">
+                                                    <c:if test="${item.getFunction_name()=='Add'}">
+                                                        <form action="user_management" method="post">
+                                                            <input type="hidden" name="action" value="${item.getFunction_name()}">
+                                                            <button type="submit" class="btn btn-primary" value="${item.getFunction_name()}">${item.getFunction_name()}</button>  
+                                                        </form>
+                                                    </c:if>
+
+
+                                                    <c:if test="${item.getFunction_name()=='Search'}">
+                                                        <form action="user_management" method="post">
+                                                            <input type="text" name="searching" placeholder="Search by name...">
+                                                            <input type="hidden" name="action" value="${item.getFunction_name()}">
+                                                            <button type="submit" class="btn btn-primary" value="${item.getFunction_name()}">${item.getFunction_name()}</button>  
+                                                        </form>
+                                                    </c:if>
+                                                </div>
+                                            </c:forEach>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                </div>
                             </div>
-                        </div>
-                    </div>   
+                        </div>   
+                    </div>
                 </div>
             </div>
-        </div>
 
     </body>
 </html>

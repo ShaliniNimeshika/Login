@@ -21,19 +21,17 @@ import java.util.logging.Logger;
  */
 public class RoleDao {
 
-    static Statement statement = null;
-    static ResultSet rs = null;
     static String role = null;
     static String roleid = null;
     
     public static ArrayList<RoleBean> loadRoleName() {
-        ArrayList<RoleBean> roles = new ArrayList<RoleBean>();
+        ArrayList<RoleBean> roles = new ArrayList<>();
         Connection con = DBConnection.createConnection();
         try {
 
-            statement = con.createStatement();
+            Statement statement = con.createStatement();
             String sql = "SELECT * from role";
-            rs = statement.executeQuery(sql);
+            ResultSet rs = statement.executeQuery(sql);
             
             while (rs.next()) { 
                 RoleBean rb = new RoleBean(rs.getString("roleid"),rs.getString("rolename"));

@@ -14,6 +14,7 @@ public class LoginBean {
     private String password;
     private String role;
     private String roleid;
+    private String status;
     //private Page pages;
     /**
      * @return the username
@@ -56,6 +57,20 @@ public class LoginBean {
      */
     public void setRoleid(String roleid) {
         this.roleid = roleid;
+    }
+
+    /**
+     * @return the status
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 }

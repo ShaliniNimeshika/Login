@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class InterfaceBean {
 
     private String interfaceid;
-
     private String functionid;
     private String f_name;
     private String if_id;
@@ -23,6 +22,12 @@ public class InterfaceBean {
     private String i_url;
     private String desc;
     private ArrayList<FunctionBean> fbean;
+
+    public InterfaceBean(String i_id, String i_name, ArrayList<FunctionBean> fbean) {
+        this.i_name = i_name;
+        this.i_id = i_id;
+        this.fbean = fbean;
+    }
 
     public InterfaceBean(String if_id, String interfaceid, String i_name, String functionid, String f_name) {
         this.interfaceid = interfaceid;

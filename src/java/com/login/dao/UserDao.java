@@ -21,23 +21,17 @@ import java.util.logging.Logger;
  */
 public class UserDao {
 
-    static Statement statement = null;
-    static Statement statement2 = null;
-    static ResultSet rs = null;
-    static String role = null;
-    static String roleid = null;
-
     public static ArrayList<UserBean> loadAllUsers() {
-        ArrayList<UserBean> user = new ArrayList<UserBean>();
+        ArrayList<UserBean> user = new ArrayList<>();
         Connection con = DBConnection.createConnection();
         try {
 
-            statement = con.createStatement();
-            String sql = "SELECT u.userid, u.username, r.rolename FROM user u, role r WHERE u.roleid=r.roleid";
-            rs = statement.executeQuery(sql);
+            Statement statement = con.createStatement();
+            String sql = "SELECT u.userid, u.username,u.password, u.active, r.rolename FROM user u, role r WHERE u.roleid=r.roleid";
+            ResultSet rs = statement.executeQuery(sql);
 
             while (rs.next()) {
-                UserBean ub = new UserBean(rs.getString("u.userid"), rs.getString("u.username"), rs.getString("r.rolename"));
+                UserBean ub = new UserBean(rs.getString("u.userid"), rs.getString("u.username"), rs.getString("u.password"), rs.getString("r.rolename"),rs.getString("u.active"));
                 user.add(ub);
             }
         } catch (SQLException ex) {
@@ -54,14 +48,17 @@ public class UserDao {
         return user;
     }
 
-    public static void addUser(String uname, String pwd, String role) {
+    public static void addUser(String uname, String pwd, String role, String status, String rstatus, String duration) {
         String username = uname;
         String password = pwd;
         String rid = role;
+        String active = status;
+        String reset = rstatus;
+        int reset_duration = Integer.parseInt(duration);
         Connection con = DBConnection.createConnection();
         try {
-            String sql = "INSERT INTO user(roleid,username,password) VALUES ('" + rid + "','" + username + "','" + password + "')";
-            statement2 = con.createStatement();
+            String sql = "INSERT INTO user(roleid,username,password,active,status,reset_duration) VALUES ('" + rid + "','" + username + "','" + password + "','"+active+"','"+reset+"','"+reset_duration+"')";
+            Statement statement2 = con.createStatement();
             statement2.executeUpdate(sql);
         } catch (SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -80,7 +77,7 @@ public class UserDao {
         Connection con = DBConnection.createConnection();
         try {
             String sql = "DELETE FROM user WHERE userid='" + userid + "'";
-            statement2 = con.createStatement();
+            Statement statement2 = con.createStatement();
             statement2.executeUpdate(sql);
         } catch (SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -101,11 +98,12 @@ public class UserDao {
         Connection con = DBConnection.createConnection();
         try {
             Statement update_statement = con.createStatement();
-            String sql = "SELECT u.userid, u.username, u.password, r.rolename FROM user u, role r WHERE u.userid='" + userid + "' and u.roleid=r.roleid";
+            String sql = "SELECT u.userid, u.username, u.password, u.active,u.reset_time, u.reset_duration, r.rolename FROM user u, role r WHERE u.userid='" + userid + "' and u.roleid=r.roleid";
             ResultSet result = update_statement.executeQuery(sql);
 
             while (result.next()) {
-                UserBean ub = new UserBean(result.getString("u.userid"),result.getString("u.username"),result.getString("u.password"),result.getString("r.rolename"));
+                
+                UserBean ub = new UserBean(result.getString("u.userid"),result.getString("u.username"),result.getString("u.password"),result.getString("r.rolename"),result.getString("u.active"),result.getString("reset_time"), result.getInt("reset_duration"));
                 data.add(ub);
                 System.out.println("3:user data loaded successfully");
             }
@@ -124,15 +122,16 @@ public class UserDao {
         return data;
     }
 
-    public static void updateUser(String userid, String username, String password, String roleid) {
+    public static void updateUser(String userid, String username, String password, String roleid, String activeS) {
         String uid = userid;
         String uname = username;
         String pwd = password;
         String rid = roleid;
+        String status = activeS;
         Connection con = DBConnection.createConnection();
         try {
-            String sql = "UPDATE user SET roleid='"+rid+"',username='"+uname+"',password='"+pwd+"' WHERE userid='"+uid+"'";
-            statement2 = con.createStatement();
+            String sql = "UPDATE user SET roleid='"+rid+"',username='"+uname+"',password='"+pwd+"',active='"+status+"' WHERE userid='"+uid+"'";
+            Statement statement2 = con.createStatement();
             statement2.executeUpdate(sql);
         } catch (SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -162,7 +161,7 @@ public class UserDao {
                     return flag;
                 }
             }
-        } catch (Exception ex) {
+        } catch (NumberFormatException | SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally{
             try {
@@ -173,5 +172,24 @@ public class UserDao {
         }
         return flag;
     }
+
+    public static ArrayList<UserBean> getSearchUser(String keyword) {
+        Connection con = DBConnection.createConnection();
+        ArrayList<UserBean> result = new ArrayList<>();
+        try {
+            String sql = "select u.userid, u.username, r.rolename from user u, role r where username like '" + "%" + keyword + "%" +"' and u.roleid=r.roleid";
+            Statement statemenet = con.createStatement();
+            ResultSet resultSet = statemenet.executeQuery(sql);
+            while(resultSet.next()){
+                UserBean search = new UserBean(resultSet.getString("u.userid"), resultSet.getString("u.username"), resultSet.getString("r.rolename"));
+                result.add(search);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result; 
+    }
+
+    
 
 }

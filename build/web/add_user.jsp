@@ -45,8 +45,15 @@
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <input type="radio" name="role" value="${role.getRoleid()}"><c:out value="${role.getRolename().toUpperCase()}"></c:out>
                                             </c:forEach>
+                                            <div class="row" style="height: 10px;"></div>
+                                            <input type="checkbox" name="activeStatus" value="1">&nbsp;Activate&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input type="checkbox" name="activeStatus" value="0">&nbsp;Deactivate
+                                            
+                                            <div class="row" style="height: 10px;"></div>
+                                            <input type="number" name="duration" min="0">
+                                            
                                             <div class="row" style="height: 25px;"></div>
-
+                                            
                                             <input type="hidden" name="action" value="add_user">
                                             <button class="btn btn-lg btn-primary btn-block" type="submit" name="Submit" value="Submit">Register</button>
                                         </form>
