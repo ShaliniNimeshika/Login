@@ -50,20 +50,29 @@
                                                 <tr>
                                                     <td><c:out value="${role.getRoleid()}"></c:out></td>
                                                     <td><c:out value="${role.getRolename()}"></c:out></td>
-                                                    <td>
-                                                    
-                                                        <c:forEach var="intf" items="${role.getIbean()}">
-                                                            <strong><c:out value="${intf.getI_name()}"></c:out></strong>
-                                                            <br>
-                                                            <c:forEach var="func" items="${intf.getFbean()}">
-                                                                <c:out value="${func.getFunction_name()}"></c:out>&nbsp;
+                                                        <td>
+                                                            <table>
+                                                            <c:forEach var="interfaces" items="${inter}">
+
+                                                                <tr>
+                                                                    <td><strong><c:out value="${interfaces.getI_name()}"></c:out></strong>&nbsp;&nbsp;&nbsp;</td>
+                                                                        <td>
+                                                                        <c:forEach var="intf" items="${role.getRa_bean()}">
+                                                                            <c:if test="${intf.getI_name()==interfaces.getI_name()}">
+                                                                                <c:out value="${intf.getF_name()}"></c:out>&nbsp;&nbsp;&nbsp;
+                                                                            </c:if>  
+                                                                        </c:forEach> 
+                                                                    </td>
+                                                                </tr>  
+                                                                <!--<br>-->
+
+                                                                <!--<br>-->
+
                                                             </c:forEach>
-                                                                <br>
-                                                        </c:forEach>
-                                                    
+                                                        </table>
                                                     </td>
                                                     <td>
-                                                        <form  action="UserFunctions" method="post">
+                                                        <form  action="user_management" method="post">
                                                             <input type="hidden" name="action" value="update_role">
                                                             <input type="hidden" name="roleid" value="${role.getRoleid()}">
                                                             <button type="submit" class="btn btn-success" value="${role.getRoleid()}">Update</button>  
@@ -79,9 +88,9 @@
                             <div class="row" style="height: 35px;"></div>
                             <div class="row">
                                 <div class="col-md-1"></div>
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <form class="form-signin" action="UserFunctions" method="post">
-                                        Insert New Role Name :<input type="text" class="form-control" name="role_name" placeholder="Role Name" required autofocus>
+                                        Insert New Role Name :<input type="text" class="form-control" name="role_name" placeholder="Role Name" required autofocus style="width: 250px;">
                                         <div class="row" style="height: 25px;"></div>
 
                                         <c:forEach var="in" items="${inter}">
@@ -102,10 +111,11 @@
 
                                         <br><br>
                                         <input type="hidden" name="action" value="add_role">
-                                        <button class="btn btn-primary" type="submit" name="Submit" value="Submit" onclick="alertMessage()">Submit</button>
+                                        <br> 
+                                        <button class="btn btn-primary" type="submit" name="Submit" value="Submit" onclick="return postMessage('role added successfully!')">Submit</button>
                                     </form>
                                 </div>
-                                <div class="col-md-5"></div>
+                                <div class="col-md-3"></div>
                             </div>
                         </div>
                     </div>   

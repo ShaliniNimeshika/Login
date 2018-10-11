@@ -34,11 +34,18 @@ public class LogoutServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
+        //invalidate the session and logout from the system
         HttpSession session = request.getSession(false);
         if (session != null) {
-            log.getLogger("Logout", "info", LoginServlet.session.getAttribute("uname").toString().toUpperCase(), request);
+            log.getLogger("Logout", "info", session.getAttribute("uname").toString().toUpperCase(), request);
+//            response.setHeader("Pragma", "no-cache");
+//            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+//            response.setHeader("Expires", "0");
+//            response.setDateHeader("Expires", -1);
+            session.setAttribute("uname",null);
             session.invalidate();
-            request.getRequestDispatcher("/index.jsp").forward(request, response);
+//            request.getRequestDispatcher("index.jsp").forward(request, response);
+            response.sendRedirect(request.getContextPath());
         }
     }
 

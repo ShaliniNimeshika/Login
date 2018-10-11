@@ -6,6 +6,7 @@
 package com.login.bean;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -16,6 +17,7 @@ public class RoleBean {
     private String roleid;
     private ArrayList<PrivilageBean> pbean;
     private ArrayList<InterfaceBean> ibean;
+    private List<RoleAccessBean> ra_bean;
 
     public ArrayList<InterfaceBean> getIbean() {
         return ibean;
@@ -29,6 +31,18 @@ public class RoleBean {
         this.rolename = rolename;
         this.roleid = roleid;
         this.ibean = ibean;
+    }
+    
+    /**
+     *
+     * @param rolename
+     * @param roleid
+     * @param ra_bean
+     */
+    public RoleBean(String rolename, String roleid, List<RoleAccessBean> ra_bean) {
+        this.rolename = rolename;
+        this.roleid = roleid;
+        this.ra_bean = ra_bean;
     }
     
     public RoleBean(String roleid,String rolename){
@@ -53,6 +67,10 @@ public class RoleBean {
      */
     public String getRoleid() {
         return roleid;
+    }
+
+    public List<RoleAccessBean> getRa_bean() {
+        return ra_bean;
     }
 
     

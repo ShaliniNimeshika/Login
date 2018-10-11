@@ -21,6 +21,11 @@ public class InterfaceBean {
     private String i_id;
     private String i_url;
     private String desc;
+    private String rid;
+
+    public String getRid() {
+        return rid;
+    }
     private ArrayList<FunctionBean> fbean;
 
     public InterfaceBean(String i_id, String i_name, ArrayList<FunctionBean> fbean) {
@@ -28,6 +33,7 @@ public class InterfaceBean {
         this.i_id = i_id;
         this.fbean = fbean;
     }
+
 
     public InterfaceBean(String if_id, String interfaceid, String i_name, String functionid, String f_name) {
         this.interfaceid = interfaceid;

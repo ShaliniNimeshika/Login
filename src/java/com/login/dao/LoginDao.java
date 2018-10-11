@@ -7,7 +7,6 @@ package com.login.dao;
 
 import com.login.bean.LoginBean;
 import com.login.bean.PageBean;
-import static com.login.connection.LoginServlet.session;
 import com.login.util.DBConnection;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -51,7 +50,6 @@ public class LoginDao {
 
                     if (active.equals("1")) {
                         loginbean.setRoleid(roleid);
-                        session.setAttribute("roleid", roleid);
                         return true;
                     }
 

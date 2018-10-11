@@ -50,7 +50,7 @@
                                             <input type="checkbox" name="activeStatus" value="0">&nbsp;Deactivate
                                             
                                             <div class="row" style="height: 10px;"></div>
-                                            <input type="number" name="duration" min="0">
+                                            <input type="number" name="duration" min="1">
                                             
                                             <div class="row" style="height: 25px;"></div>
                                             

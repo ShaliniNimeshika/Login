@@ -50,6 +50,14 @@ public class PasswordServlet extends HttpServlet {
         String curpwd = request.getParameter("cur_password");
         String newpwd = request.getParameter("new_password");
         System.out.println("new password"+newpwd);
+        
+        /*current password
+          new password
+          confirm password
+          validations are done in front end.
+        
+          when the user submit the correct data >> go to resetPassword() and update the database
+        */
         PasswordDao.resetPassword(username,curpwd,newpwd);
         
         request.getRequestDispatcher("index.jsp").forward(request, response);

@@ -25,18 +25,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author shalini_w
  */
 public class UserFunctions extends HttpServlet {
-
-    static String roleid = LoginServlet.session.getAttribute("roleid").toString();
-    static String interfaceid;
-    ArrayList<FunctionBean> fb;
-    ArrayList<UserBean> ub;
-    ArrayList<RoleBean> rb;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -50,7 +45,7 @@ public class UserFunctions extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -79,40 +74,39 @@ public class UserFunctions extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        interfaceid = request.getParameter("index");
+        HttpSession session = request.getSession();
+//        String roleid = session.getAttribute("roleid").toString();
+//        String interfaceid = request.getParameter("index");
         String action = request.getParameter("action");
-        System.out.println("button :" + action);
 
-        if (action.equals("add_user")) {
-
-            add_user(request, response);
-
-        } else if (action.equals("update_user")) {
-
-            update_user(request, response);
-
-        } else if (action.equals("add_role")) {
-
-            add_role(request, response);
-
-        } else if (action.equals("new_page")) {
-
-            add_page(request, response);
-
-        } else if (action.equals("update_function")) {
-
-            update_page(request, response);
-
-        } else if (action.equals("update_interface")) {
-
-            update_interface(request, response);
-
-        } else if (action.equals("delete_page")) {
-
-            delete_interface(request, response);
-
-        } 
+        switch (action) {
+            case "add_user":
+                add_user(request, response); //add new user
+                break;
+            case "update_user":
+                update_user(request, response); //uodate existing user
+                break;
+            case "add_role":
+                add_role(request, response); //add new user role
+                break;
+            case "update_role":
+                update_role(request, response); //add new user role
+                break;
+            case "new_page":
+                add_page(request, response); //add new page(interface)
+                break;
+            case "update_function":
+                update_page(request, response); //load update page interface
+                break;
+            case "update_interface":
+                update_interface(request, response); //change the assigned functions of the page
+                break;
+            case "delete_page":
+                delete_interface(request, response); //delete the page permanently 
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -133,18 +127,20 @@ public class UserFunctions extends HttpServlet {
         String status = "0";
         String duration = request.getParameter("duration");
 
+        ArrayList<UserBean> ub;
+        ArrayList<RoleBean> rb;
         boolean flag = UserDao.isRegistered(username);
         if (flag == false) {
             UserDao.addUser(username, password, role, actStatus, status, duration);
             System.out.println("data added successfully");
 
             ub = UserDao.loadAllUsers();
-            LoginServlet.session.setAttribute("users", ub);
-            response.sendRedirect("user_management.jsp");
+            request.setAttribute("users", ub);
+            request.getRequestDispatcher("user_management.jsp").forward(request, response);
         } else {
             rb = RoleDao.loadRoleName();
-            LoginServlet.session.setAttribute("roles", rb);
-            response.sendRedirect("add_user.jsp");
+            request.setAttribute("roles", rb);
+            request.getRequestDispatcher("add_user.jsp").forward(request, response);
         }
     }
 
@@ -157,10 +153,15 @@ public class UserFunctions extends HttpServlet {
 
         UserDao.updateUser(userid, username, password, rid, status);
         System.out.println("user updated successfully");
-
+        HttpSession session = request.getSession();
+        String roleid = session.getAttribute("roleid").toString();
+        ArrayList<FunctionBean> fb;
+        fb = InterfaceDao.loadFunction(roleid, "1");
+        ArrayList<UserBean> ub;
         ub = UserDao.loadAllUsers();
-        LoginServlet.session.setAttribute("users", ub);
-        response.sendRedirect("user_management.jsp");
+        request.setAttribute("users", ub);
+        request.setAttribute("functions", fb);
+        request.getRequestDispatcher("user_management.jsp").forward(request, response);
     }
 
     private void add_role(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -172,18 +173,18 @@ public class UserFunctions extends HttpServlet {
         ArrayList<InterfaceBean> interfaces;
         ArrayList<InterfaceBean> ib;
         ArrayList<RoleBean> alldata;
-
+        ArrayList<RoleBean> rb;
         rb = RoleDao.loadRoleName();
         ib = InterfaceDao.loadInterfaceFunctions();
         interfaces = InterfaceDao.loadAllInterfaces();
         alldata = InterfaceDao.loadUserFunctions();
 
-        LoginServlet.session.setAttribute("roles", rb);
-        LoginServlet.session.setAttribute("funcs", ib);
-        LoginServlet.session.setAttribute("inter", interfaces);
-        LoginServlet.session.setAttribute("alldata", alldata);
+        request.setAttribute("roles", rb);
+        request.setAttribute("funcs", ib);
+        request.setAttribute("inter", interfaces);
+        request.setAttribute("alldata", alldata);
 
-        response.sendRedirect("add_role.jsp");
+        request.getRequestDispatcher("add_role.jsp").forward(request, response);
     }
 
     private void add_page(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -197,18 +198,18 @@ public class UserFunctions extends HttpServlet {
         ArrayList<InterfaceBean> interfaces;
         ArrayList<InterfaceBean> ib;
         ArrayList<PageBean> al;
-
+        ArrayList<RoleBean> rb;
         rb = RoleDao.loadRoleName();
         ib = InterfaceDao.loadInterfaceFunctions();
         interfaces = InterfaceDao.loadAllInterfaces();
         al = LoginDao.loadPages();
 
-        LoginServlet.session.setAttribute("pages", al);
-        LoginServlet.session.setAttribute("roles", rb);
-        LoginServlet.session.setAttribute("funcs", ib);
-        LoginServlet.session.setAttribute("inter", interfaces);
+        request.setAttribute("pages", al);
+        request.setAttribute("roles", rb);
+        request.setAttribute("funcs", ib);
+        request.setAttribute("inter", interfaces);
 
-        response.sendRedirect("add_role.jsp");
+        request.getRequestDispatcher("add_role.jsp").forward(request, response);
     }
 
     private void update_page(HttpServletRequest request, HttpServletResponse response) {
@@ -218,17 +219,17 @@ public class UserFunctions extends HttpServlet {
 //            load selected interface details
             ArrayList<InterfaceBean> interface_bean;
             interface_bean = InterfaceDao.loadInterface(iid);
-            LoginServlet.session.setAttribute("interface_bean", interface_bean);
+            request.setAttribute("interface_bean", interface_bean);
 
 //          load all functions in database
             ArrayList<FunctionBean> functions;
             functions = InterfaceDao.loadAllFunctions();
-            LoginServlet.session.setAttribute("functions", functions);
+            request.setAttribute("functions", functions);
 
 //            load the functions of selected interface
             ArrayList<InterfaceBean> inter;
             inter = InterfaceDao.loadFunctionInterface();
-            LoginServlet.session.setAttribute("inter", inter);
+            request.setAttribute("inter", inter);
 
             String[] value = new String[functions.size()];
 
@@ -249,14 +250,13 @@ public class UserFunctions extends HttpServlet {
                 }
             }
             System.out.println("values :");
-            for (int i = 0; i < value.length; i++) {
-                System.out.println(value[i]);
+            for (String value1 : value) {
+                System.out.println(value1);
             }
 
-            LoginServlet.session.setAttribute("func_values", value);
-
-            response.sendRedirect("update_page.jsp");
-        } catch (IOException ex) {
+            request.setAttribute("func_values", value);
+            request.getRequestDispatcher("update_page.jsp").forward(request, response);
+        } catch (IOException | ServletException ex) {
             Logger.getLogger(UserFunctions.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -287,39 +287,36 @@ public class UserFunctions extends HttpServlet {
             for (String function : functions) {
                 newfuncs.add(function);
             }
+//
+//            System.out.println("data from db:");
+//            for (String old1 : old) {
+//                System.out.println(old1);
+//            }
+//
+//            System.out.println("\ndata from UI:");
+//
+//            for (String function : functions) {
+//                System.out.println(function);
+//            }
 
-            System.out.println("data from db:");
-            for (String old1 : old) {
-                System.out.println(old1);
+            for (String x : oldfuncs) {
+                for (String y : newfuncs) {
+                    if (x.equals(y)) {
+                        oldfuncs.remove(x);
+                        newfuncs.remove(y);
+                    }
+                }
             }
 
-            System.out.println("\ndata from UI:");
-
-            for (String function : functions) {
-                System.out.println(function);
-            }
-            
-            
-            for(String x: oldfuncs) {
-			for(String y: newfuncs) {
-				if(x.equals(y)) {
-					oldfuncs.remove(x);
-					newfuncs.remove(y);
-				}
-			}
-		}
-            
             System.out.println("\n rest data from db:");
             for (String old1 : oldfuncs) {
-                InterfaceDao.deleteFIFunction(old1,pageid);
+                InterfaceDao.deleteFIFunction(old1, pageid);
             }
-
             System.out.println("\nrest data from UI:");
 
             for (String function : newfuncs) {
-                InterfaceDao.insertFIFunction(function,pageid);
+                InterfaceDao.insertFIFunction(function, pageid);
             }
-            
             //update interface info
             InterfaceDao.updateInterface(pageid, pagename, pageurl, pagedesc);
             //load new_page.jsp
@@ -328,11 +325,10 @@ public class UserFunctions extends HttpServlet {
             ArrayList<InterfaceBean> inter;
             inter = InterfaceDao.loadFunctionInterface();
 
-            LoginServlet.session.setAttribute("functions", funcs);
-            LoginServlet.session.setAttribute("inter", inter);
-
-            response.sendRedirect("new_page.jsp");
-        } catch (IOException ex) {
+            request.setAttribute("functions", funcs);
+            request.setAttribute("inter", inter);
+            request.getRequestDispatcher("new_page.jsp").forward(request, response);
+        } catch (IOException | ServletException ex) {
             Logger.getLogger(UserFunctions.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -340,27 +336,24 @@ public class UserFunctions extends HttpServlet {
     private void delete_interface(HttpServletRequest request, HttpServletResponse response) {
         try {
             String iid = request.getParameter("pageid");
-            ArrayList<InterfaceBean> ibean = new ArrayList<>();
+            ArrayList<InterfaceBean> ibean;
             ibean = InterfaceDao.findInterfaceFunctionID(iid);
 
-            ArrayList<PrivilageBean> pbean = new ArrayList<>();
+            ArrayList<PrivilageBean> pbean;
             pbean = InterfaceDao.findPrivilageID(ibean);
 
             //delete privilages assigned for the interface
             InterfaceDao.deletePrivilages(pbean);
 
-            System.out.println("privilages deleted successfully");
-
+//            System.out.println("privilages deleted successfully");
             //delete functions assigned for the interface
             InterfaceDao.deleteInterfaceFunction(ibean);
 
-            System.out.println("functions of interface deleted successfully");
-
+//            System.out.println("functions of interface deleted successfully");
             //delete interface
             InterfaceDao.deleteInterface(iid);
 
-            System.out.println("interface deleted successfully");
-
+//            System.out.println("interface deleted successfully");
             ArrayList<FunctionBean> functions;
             functions = InterfaceDao.loadAllFunctions();
             ArrayList<InterfaceBean> inter;
@@ -368,16 +361,19 @@ public class UserFunctions extends HttpServlet {
             ArrayList<PageBean> al;
             al = LoginDao.loadPages();
 
-            LoginServlet.session.setAttribute("pages", al);
-            LoginServlet.session.setAttribute("functions", functions);
-            LoginServlet.session.setAttribute("inter", inter);
+            request.setAttribute("pages", al);
+            request.setAttribute("functions", functions);
+            request.setAttribute("inter", inter);
 
-            response.sendRedirect("new_page.jsp");
-        } catch (IOException ex) {
+            request.getRequestDispatcher("new_page.jsp").forward(request, response);
+        } catch (IOException | ServletException ex) {
             Logger.getLogger(UserFunctions.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
+    private void update_role(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        
+    }
 
 }

@@ -15,14 +15,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author shalini_w
  */
 public class WithdrawServlet extends HttpServlet {
-    static String roleid;
-    static String interfaceid;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -65,15 +65,16 @@ public class WithdrawServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        roleid = LoginServlet.session.getAttribute("roleid").toString();
-        interfaceid = request.getParameter("index");
+        HttpSession session = request.getSession();
+        String roleid = session.getAttribute("roleid").toString();
+        String interfaceid = request.getParameter("index");
         
         ArrayList<FunctionBean> fb;
         try {
             fb = InterfaceDao.loadFunction(roleid,interfaceid);
             request.setAttribute("functions", fb);
             request.getRequestDispatcher("withdraw.jsp").forward(request, response);
-        } catch (Exception ex) {
+        } catch (IOException | ServletException ex) {
             Logger.getLogger(WithdrawServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

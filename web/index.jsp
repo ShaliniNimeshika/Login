@@ -14,7 +14,7 @@
         <link href="/resources/css/styles.css" rel="stylesheet">
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
         <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-        
+
         <title>Login</title>
     </head>
     <body>
@@ -26,9 +26,9 @@
                     <div class="account-wall">
                         <form class="form-signin" action="home" method="post">
                             <input type="text" class="form-control" name="username" placeholder="Username" required autofocus>
-                                <div class="row" style="height: 5px;"></div>
+                            <div class="row" style="height: 5px;"></div>
                             <input type="password" class="form-control" name="password" placeholder="Password" required>
-                                <div class="row" style="height: 25px;"></div>
+                            <div class="row" style="height: 25px;"></div>
                             <button class="btn btn-lg btn-primary btn-block" type="submit" name="Submit" value="Submit">Sign in</button>
                         </form>
                     </div>

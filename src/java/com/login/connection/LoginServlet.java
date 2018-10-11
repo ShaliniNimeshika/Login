@@ -11,13 +11,10 @@ import com.login.dao.LoginDao;
 import com.login.util.Log4jLogger;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.util.converter.LocalDateStringConverter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,8 +27,7 @@ import javax.servlet.http.HttpSession;
  */
 public class LoginServlet extends HttpServlet {
 
-    public static HttpSession session = null;
-    static ArrayList<PageBean> al;
+
     Log4jLogger log = new Log4jLogger();
 
     /**
@@ -76,34 +72,38 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        session = request.getSession();
+        
+        HttpSession session = request.getSession();
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-
+        ArrayList<PageBean> al;
         LoginBean loginbean = new LoginBean();
 
         loginbean.setUsername(username);
         loginbean.setPassword(password);
 
+        //return the boolean value = true when the user authenticate by username and password successfully
         boolean flag = LoginDao.authenticateUser(loginbean);
 
         if (flag == true) {
             try {
+                //check the user's reset password status : for first login of user
                 String reset = LoginDao.getResetStatus(loginbean);
-                System.out.println("reset value:" + reset);
+                
                 if (reset.equals("0")) {
                     request.setAttribute("username", username);
                     request.setAttribute("password", password);
                     request.getRequestDispatcher("password_reset.jsp").forward(request, response);
                 } else {
+                    
+                    //check the reset password duration with the current date and last reset date : for all users
                     int reset_duration = LoginDao.getResetDuration(loginbean);
                     String reset_date = LoginDao.getResetTime(loginbean);
-                    
+
                     //get today date
                     LocalDate today = LocalDate.now();
-                    System.out.println("today:"+today);
-                    System.out.println("last day in string:"+reset_date);
                     
+
                     //get the last reset date into localdate object
                     LocalDate last_reset = LocalDate.parse(reset_date);
 
@@ -116,22 +116,23 @@ public class LoginServlet extends HttpServlet {
                         request.setAttribute("password", password);
                         request.getRequestDispatcher("password_reset.jsp").forward(request, response);
                     } else {
+                        //when the users complete the all checkpoints they can log
                         al = LoginDao.loadPages();
 
                         session.setAttribute("pages", al);
                         session.setAttribute("uname", username);
-//                session.setAttribute("roleid", loginbean.getRoleid());
+                        session.setAttribute("roleid", loginbean.getRoleid());
                         request.getRequestDispatcher("home.jsp").forward(request, response);
 
                         log.getLogger("System Log".toUpperCase(), "info", username, request);
                     }
 
                 }
-            } catch (Exception ex) {
+            } catch (IOException | ServletException ex) {
                 Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-
+            //authentication fails
             log.getLogger("unauthorized Login Attempt".toUpperCase(), "warn", username, request);
             response.sendRedirect("index.jsp");
         }

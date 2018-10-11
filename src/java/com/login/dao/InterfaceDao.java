@@ -8,14 +8,15 @@ package com.login.dao;
 import com.login.bean.FunctionBean;
 import com.login.bean.InterfaceBean;
 import com.login.bean.PrivilageBean;
+import com.login.bean.RoleAccessBean;
 import com.login.bean.RoleBean;
-import com.login.connection.LoginServlet;
 import com.login.util.DBConnection;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,9 +30,10 @@ public class InterfaceDao {
     static String roleid = null;
 
     public static ArrayList<FunctionBean> loadFunction(String rid, String inid) {
+
         ArrayList<FunctionBean> data = new ArrayList<>();
         interfaceid = inid;
-        roleid = (String) LoginServlet.session.getAttribute("roleid");
+        roleid = rid;
         Connection con = DBConnection.createConnection();
         try {
 
@@ -592,31 +594,21 @@ public class InterfaceDao {
                 String rid = rs1.getString("roleid");
                 String rname = rs1.getString("rolename");
 
-                String sql2 = "select distinct i.interfaceid, i.name from interface i, func_interface fi, privilage p where p.roleid='"+rid+"' and p.if_id=fi.if_id";
+                String sql2 = "select i.interfaceid,i.name,f.functionid, f.name from interface i inner join func_interface fi on i.interfaceid=fi.interfaceid inner join function f on f.functionid=fi.functionid where fi.if_id in (select if_id from privilage where roleid in (select roleid from role where roleid='" + rid + "'))";
                 Statement statement2 = con.createStatement();
                 ResultSet rs2 = statement2.executeQuery(sql2);
-                ArrayList<InterfaceBean> ibean = new ArrayList<>();
+                List<RoleAccessBean> ra_bean = new ArrayList<>();
                 while (rs2.next()) {
                     String iid = rs2.getString("i.interfaceid");
                     String iname = rs2.getString("i.name");
+                    String fid = rs2.getString("f.functionid");
+                    String fname = rs2.getString("f.name");
 
-                    String sql3 = "select distinct f.functionid, f.name from function f, interface i, func_interface fi, privilage p where p.roleid='"+rid+"' and i.interfaceid = '"+iid+"' and fi.functionid=f.functionid and fi.if_id=p.if_id";
-                    Statement statement3 = con.createStatement();
-                    ResultSet rs3 = statement3.executeQuery(sql3);
-                    ArrayList<FunctionBean> fbean = new ArrayList<>();
-                    
-                    while (rs3.next()) {                        
-                        String fid = rs3.getString("f.functionid");
-                        String fname = rs3.getString("f.name");
-                        
-                        FunctionBean fb = new FunctionBean(fid, fname);
-                        fbean.add(fb);
-                    }
-                    InterfaceBean ib = new InterfaceBean(iid, iname, fbean);
-                    ibean.add(ib);
+                    RoleAccessBean ra = new RoleAccessBean(rid, iid, iname, fid, fname);
+                    ra_bean.add(ra);
                 }
 
-                RoleBean rb = new RoleBean(rname, rid, ibean);
+                RoleBean rb = new RoleBean(rname, rid, ra_bean);
                 rbean.add(rb);
             }
         } catch (SQLException ex) {
@@ -629,11 +621,78 @@ public class InterfaceDao {
             }
         }
 
-        String sql5 = "";
-        Statement statement5;
-        ResultSet rs5;
+        return rbean;
+    }
+
+    public static ArrayList<RoleBean> loadRoleAcessibleFunctions(String selected_rid) {
+        ArrayList<RoleBean> rbean = new ArrayList<>();
+        Connection con = DBConnection.createConnection();
+        String rid = selected_rid;
+        try {
+            String sql1 = "SELECT * FROM role where roleid='" + rid + "'";
+            Statement statement1 = con.createStatement();
+            ResultSet rs1 = statement1.executeQuery(sql1);
+
+            while (rs1.next()) {
+//                String rid = rs1.getString("roleid");
+                String rname = rs1.getString("rolename");
+
+                String sql2 = "select fi.if_id, i.interfaceid,i.name,f.functionid, f.name from interface i inner join func_interface fi on i.interfaceid=fi.interfaceid inner join function f on f.functionid=fi.functionid where fi.if_id in (select if_id from privilage where roleid in (select roleid from role where roleid='" + rid + "'))";
+                Statement statement2 = con.createStatement();
+                ResultSet rs2 = statement2.executeQuery(sql2);
+                List<RoleAccessBean> ra_bean = new ArrayList<>();
+                while (rs2.next()) {
+                    String iid = rs2.getString("i.interfaceid");
+                    String iname = rs2.getString("i.name");
+                    String fid = rs2.getString("f.functionid");
+                    String fname = rs2.getString("f.name");
+                    String ifid = rs2.getString("fi.if_id");
+
+                    RoleAccessBean ra = new RoleAccessBean(rid, iid, iname, fid, fname, ifid);
+                    ra_bean.add(ra);
+                }
+
+                RoleBean rb = new RoleBean(rname, rid, ra_bean);
+                rbean.add(rb);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
 
         return rbean;
+    }
+
+    public static ArrayList<InterfaceBean> loadAllInterfaceFunctions() {
+        Connection con = DBConnection.createConnection();
+        ArrayList<InterfaceBean> ibean = new ArrayList<>();
+
+        try {
+            String sql = "select DISTINCT fi.if_id, i.name, f.name from interface i inner join func_interface fi ON fi.interfaceid=i.interfaceid inner join function f on f.functionid=fi.functionid order BY fi.if_id";
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            
+            while (rs.next()) {                
+                InterfaceBean ib = new InterfaceBean(rs.getString("fi.if_id"), rs.getString("i.name"), rs.getString("f.name"));
+                ibean.add(ib);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+
+        return ibean;
     }
 
 }

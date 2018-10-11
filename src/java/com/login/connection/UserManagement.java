@@ -8,6 +8,7 @@ package com.login.connection;
 
 import com.login.bean.FunctionBean;
 import com.login.bean.InterfaceBean;
+import com.login.bean.RoleAccessBean;
 import com.login.bean.RoleBean;
 import com.login.bean.UserBean;
 import com.login.dao.InterfaceDao;
@@ -21,18 +22,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author shalini_w
  */
 public class UserManagement extends HttpServlet {
-
-    static String roleid = LoginServlet.session.getAttribute("roleid").toString();
-    static String interfaceid;
-    ArrayList<FunctionBean> fb;
-    ArrayList<UserBean> ub;
-    ArrayList<RoleBean> rb;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,7 +42,7 @@ public class UserManagement extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         doPost(request, response);
     }
 
@@ -76,127 +72,154 @@ public class UserManagement extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        interfaceid = request.getParameter("index");
+        HttpSession session = request.getSession();
+        String roleid = session.getAttribute("roleid").toString();
+        String interfaceid = request.getParameter("index");
         String action = request.getParameter("action");
-//        session1.setAttribute("action", action); 
-//        System.out.println("button :" + action);
-        if (action.equals("Add")) {
+        ArrayList<UserBean> data;
+        ArrayList<FunctionBean> fb;
+        ArrayList<UserBean> ub;
+        ArrayList<RoleBean> rb;
 
-            ArrayList<RoleBean> rb;
-            rb = RoleDao.loadRoleName();
-            try {
-                request.setAttribute("roles",rb);
-                request.getRequestDispatcher("add_user.jsp").forward(request, response);
-            } catch (IOException | ServletException ex) {
-                Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
+        //get the hidden value as action to specify, which action that the user want to do.
+        switch (action) {
+            //go to add_user.jsp
+            case "Add": {
+                rb = RoleDao.loadRoleName();
+                try {
+                    request.setAttribute("roles", rb);
+                    request.getRequestDispatcher("add_user.jsp").forward(request, response);
+                } catch (IOException | ServletException ex) {
+                    Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
             }
+            //delete user from database
+            case "Delete":
+                delete_user(request, response);
+                break;
+            //search user from database
+            case "Search":
+                search_user(request, response);
+                break;
+            //go to update_user.jsp 
+            case "Update":
+                String uid = request.getParameter("userid");
 
-        } else if (action.equals("Delete")) {
+                data = UserDao.loadUserData(uid);
+                rb = RoleDao.loadRoleName();
+                try {
+                    request.setAttribute("roles", rb);
+                    request.setAttribute("data", data);
+                    request.getRequestDispatcher("update_user.jsp").forward(request, response);
+                } catch (IOException | ServletException ex) {
+                    Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            //go to add_role.jsp
+            case "New Role":
+                System.out.println("try to add new user role");
+                rb = RoleDao.loadRoleName();
+                ArrayList<InterfaceBean> ib;
+                ArrayList<InterfaceBean> interfaces;
+                ArrayList<RoleBean> alldata;
+                ib = InterfaceDao.loadInterfaceFunctions();
+                interfaces = InterfaceDao.loadAllInterfaces();
+                alldata = InterfaceDao.loadUserFunctions();
+                try {
 
-            delete_user(request, response);
+                    request.setAttribute("roles", rb);
+                    request.setAttribute("funcs", ib);
+                    request.setAttribute("inter", interfaces);
+                    request.setAttribute("alldata", alldata);
+                    request.getRequestDispatcher("add_role.jsp").forward(request, response);
+                } catch (IOException | ServletException ex) {
+                    Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            // goto update_role.jsp
+            case "update_role":
+                String selected_rid = request.getParameter("roleid");
+                System.out.println("update user role");
+                rb = RoleDao.loadRoleName();
 
-        }  else if (action.equals("Search")) {
-
-            search_user(request, response);
-
-        }  else if (action.equals("Update")) {
-//            System.out.println("1:get action as Update");
-            String uid = request.getParameter("userid");
-//            System.out.println("userid for update :"+uid);
-            
-            ArrayList<UserBean> data;
-            data = UserDao.loadUserData(uid);
-            
-            try {
-
-                request.setAttribute("roles", rb);
-                request.setAttribute("data", data);
-                request.getRequestDispatcher("update_user.jsp").forward(request, response);
-//                System.out.println("4:interface is loaded");
-            } catch (IOException | ServletException ex) {
-                Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        } else if (action.equals("New Role")) {
-
-            System.out.println("try to add new user role");
-
-            rb = RoleDao.loadRoleName();
-            ArrayList<InterfaceBean> ib;
-            ArrayList<InterfaceBean> interfaces;
-            ArrayList<RoleBean> alldata;
-            ib = InterfaceDao.loadInterfaceFunctions();
-            interfaces = InterfaceDao.loadAllInterfaces();
-            alldata = InterfaceDao.loadUserFunctions();
-            
-            for (int i = 0; i < alldata.size(); i++) {
-                RoleBean get = alldata.get(i);
-                System.out.println("\n"+get.getRoleid()+" "+get.getRolename());
-                for (int j = 0; j < get.getIbean().size(); j++) {
-                    InterfaceBean get1 = get.getIbean().get(j);
-                    System.out.println(get1.getI_id()+" "+get1.getI_name());
-                    for (int k = 0; k < get1.getFbean().size(); k++) {
-                        FunctionBean get2 = get1.getFbean().get(k);
-                        System.out.println("functions"+get2.getFunction_id()+" "+get2.getFunction_name());
+                ArrayList<RoleBean> roledata;
+                ib = InterfaceDao.loadAllInterfaceFunctions(); //include ifid,iname,fname
+                interfaces = InterfaceDao.loadAllInterfaces();
+                roledata = InterfaceDao.loadRoleAcessibleFunctions(selected_rid); //include roleid,iid,iname,fid,fname,ifid
+                
+                String[] permission = new String[ib.size()];
+                for (int i = 0; i < roledata.size(); i++) {
+                    RoleBean get = roledata.get(i);
+                    System.out.println("Role name : "+i+" "+get.getRolename());
+                }
+                for (int i = 0; i < ib.size(); i++) {
+                    InterfaceBean get = ib.get(i);
+                    System.out.println(get.getF_name());
+                    for (int j = 0; j < roledata.get(0).getRa_bean().size(); j++) {
+                        RoleAccessBean get1 = roledata.get(0).getRa_bean().get(j);
+                        if (get.getF_name().equals(get1.getF_name())) {
+                            permission[i] = "1";
+                        } else {
+                            permission[i] = "0";
+                        }
                     }
                 }
-            }
-            
-            
-            try {
-                LoginServlet.session.setAttribute("funcs", ib);
-                LoginServlet.session.setAttribute("inter", interfaces);
-                LoginServlet.session.setAttribute("alldata", alldata);
-                request.setAttribute("roles", rb);
-                request.setAttribute("funcs", ib);
-                request.setAttribute("inter", interfaces);
-                request.setAttribute("alldata", alldata);
-                request.getRequestDispatcher("add_role.jsp").forward(request, response);
-            } catch (Exception ex) {
-                Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        } else if (action.equals("New Interface")) {
-
-            System.out.println("Adding new page with functions nb");
-            ArrayList<FunctionBean> functions;
-            functions = InterfaceDao.loadAllFunctions();
-            ArrayList<InterfaceBean> inter;
-            inter = InterfaceDao.loadFunctionInterface();
-            try {
-                LoginServlet.session.setAttribute("functions", functions);
-                LoginServlet.session.setAttribute("inter", inter);
-                request.setAttribute("functions", functions);
-//                request.setAttribute("funcs", ib);
-                request.setAttribute("inter", inter);
                 
-                request.getRequestDispatcher("new_page.jsp").forward(request, response);
-            } catch (Exception ex) {
-                Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
+                System.out.println("\n");
+                ArrayList<String> per = new ArrayList<>();
+                for (int i = 0; i < permission.length; i++) {
+                    String string = permission[i];
+                    per.add(string);
+                    System.out.println(string);
+                }
+                
+                
+                
+                try {
+                    request.setAttribute("data", permission);
+                    request.setAttribute("roles", rb);
+                    request.setAttribute("funcs", ib);
+                    request.setAttribute("inter", interfaces);
+                    request.setAttribute("alldata", roledata);
 
-            rb = RoleDao.loadRoleName();
-            fb = InterfaceDao.loadFunction(roleid, interfaceid);
-            ub = UserDao.loadAllUsers();
-            try {
+                    request.getRequestDispatcher("update_role.jsp").forward(request, response);
+                } catch (IOException | ServletException ex) {
+                    Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            //go to new_page.jsp
+            case "New Interface":
+                System.out.println("Adding new page with functions nb");
+                ArrayList<FunctionBean> function;
+                function = InterfaceDao.loadAllFunctions();
+                ArrayList<InterfaceBean> inte;
+                inte = InterfaceDao.loadFunctionInterface();
+                try {
 
-                LoginServlet.session.setAttribute("index", interfaceid);
-                LoginServlet.session.setAttribute("functions", fb);
-                LoginServlet.session.setAttribute("users", ub);
-                request.setAttribute("index", interfaceid);
-                request.setAttribute("functions", fb);
-                request.setAttribute("users", ub);
-                request.getRequestDispatcher("user_management.jsp").forward(request, response);
-            } catch (Exception ex) {
-                Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                    request.setAttribute("functions", function);
+                    request.setAttribute("inter", inte);
+
+                    request.getRequestDispatcher("new_page.jsp").forward(request, response);
+                } catch (IOException | ServletException ex) {
+                    Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            //if there is no specific action is required, user_management.jsp is loading    
+            default:
+                fb = InterfaceDao.loadFunction(roleid, interfaceid);
+                ub = UserDao.loadAllUsers();
+                try {
+
+                    request.setAttribute("index", interfaceid);
+                    request.setAttribute("functions", fb);
+                    request.setAttribute("users", ub);
+                    request.getRequestDispatcher("user_management.jsp").forward(request, response);
+                } catch (IOException | ServletException ex) {
+                    Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
         }
-        //add_user(request, response);
-//        search_user(request, response);
-//        update_user(request, response);
-//        delete_user(request, response);
     }
 
     /**
@@ -210,35 +233,34 @@ public class UserManagement extends HttpServlet {
     }// </editor-fold>
 
     private void delete_user(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //function for deleting user from database starts here
         String uid = request.getParameter("userid");
         System.out.println("delete user id" + uid);
         UserDao.deleteUser(uid);
         System.out.println("data delete successfully");
-
+        ArrayList<UserBean> ub;
         ub = UserDao.loadAllUsers();
-        LoginServlet.session.setAttribute("users", ub);
-        response.sendRedirect("user_management.jsp");
+        request.setAttribute("users", ub);
+        request.getRequestDispatcher("user_management.jsp").forward(request, response);
     }
 
     private void search_user(HttpServletRequest request, HttpServletResponse response) {
+        //function for searching user from database starts here
         String search = request.getParameter("searching");
-        
-        ArrayList<UserBean> getUser = new ArrayList<>();
+        HttpSession session = request.getSession();
+        String roleid = session.getAttribute("roleid").toString();
+        ArrayList<UserBean> getUser;
+        ArrayList<FunctionBean> fb;
         getUser = UserDao.getSearchUser(search);
-            rb = RoleDao.loadRoleName();
-            fb = InterfaceDao.loadFunction(roleid, "1");
-            try {
+        fb = InterfaceDao.loadFunction(roleid, "1");
+        try {
+            request.setAttribute("functions", fb);
+            request.setAttribute("users", getUser);
+            request.getRequestDispatcher("user_management.jsp").forward(request, response);
+        } catch (IOException | ServletException ex) {
+            Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-                
-                LoginServlet.session.setAttribute("functions", fb);
-        
-                request.setAttribute("functions", fb);
-                request.setAttribute("users", getUser);
-                request.getRequestDispatcher("user_management.jsp").forward(request, response);
-            } catch (IOException | ServletException ex) {
-                Logger.getLogger(UserManagement.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        
     }
 
 }
