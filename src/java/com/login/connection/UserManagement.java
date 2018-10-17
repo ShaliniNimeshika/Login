@@ -160,10 +160,12 @@ public class UserManagement extends HttpServlet {
                         RoleAccessBean get1 = roledata.get(0).getRa_bean().get(j);
                         if (get.getF_name().equals(get1.getF_name())) {
                             permission[i] = "1";
-                        } else {
-                            permission[i] = "0";
-                        }
+                            break;
+                        } 
                     }
+                    
+                    if(permission[i] == null)
+                        permission[i] = "0";
                 }
                 
                 System.out.println("\n");
