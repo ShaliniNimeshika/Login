@@ -18,11 +18,11 @@ public class test {
 		b.add("5");
 		b.add("1");
 		
-		for(String x: a) {
-			for(String y: b) {
-				if(x.equals(y)) {
-					a.remove(x);
-					b.remove(y);
+		for(String xResult: a) {
+			for(String yResult: b) {
+				if(xResult.equals(yResult)) {
+					a.remove(xResult);
+					b.remove(yResult);
 				}
 			}
 		}
