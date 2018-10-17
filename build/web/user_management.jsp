@@ -12,11 +12,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>User Management</title>
-        <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js" ></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css"/>
+        
     </head>
     <body>
         <div class="container-fluid">
@@ -122,8 +119,4 @@
 
     </body>
 </html>
-<script>
-    $(document).ready(function () {
-        $('#Table').DataTable();
-    });
-</script>
+
