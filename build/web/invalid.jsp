@@ -30,7 +30,7 @@
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
                     <center>
-                        <a href="<%= request.getContextPath()%>"><input type="button" class="btn btn-primary" value="Process Login"></button></a>
+                        <a href="<%= request.getContextPath()%>"><input type="button" class="btn btn-danger btn-lg" value="Process Login"></button></a>
                     </center>
                 </div>
                 <div class="col-md-4"></div>
