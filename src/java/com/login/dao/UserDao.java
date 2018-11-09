@@ -27,18 +27,18 @@ public class UserDao {
         try {
 
             Statement statement = con.createStatement();
-            String sql = "SELECT u.userid, u.username,u.password, u.active, r.rolename FROM user u, role r WHERE u.roleid=r.roleid";
+            String sql = "SELECT u.userid, u.username,u.password, u.active, u.created_time, r.rolename FROM user u, role r WHERE u.roleid=r.roleid";
             ResultSet rs = statement.executeQuery(sql);
 
             while (rs.next()) {
-                UserBean ub = new UserBean(rs.getString("u.userid"), rs.getString("u.username"), rs.getString("u.password"), rs.getString("r.rolename"),rs.getString("u.active"));
+                UserBean ub = new UserBean(rs.getString("u.userid"), rs.getString("u.username"), rs.getString("u.password"), rs.getString("r.rolename"), rs.getString("u.active"), rs.getString("u.created_time"));
                 user.add(ub);
             }
         } catch (SQLException ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
+        } finally {
             try {
                 con.close();
             } catch (SQLException ex) {
@@ -48,21 +48,24 @@ public class UserDao {
         return user;
     }
 
-    public static void addUser(String uname, String pwd, String role, String status, String rstatus, String duration) {
+    public static void addUser(String uname, String pwd, String uemail, String role, String status, String rstatus, String duration) {
         String username = uname;
         String password = pwd;
+        String email = uemail;
         String rid = role;
         String active = status;
         String reset = rstatus;
         int reset_duration = Integer.parseInt(duration);
         Connection con = DBConnection.createConnection();
         try {
-            String sql = "INSERT INTO user(roleid,username,password,active,status,reset_duration) VALUES ('" + rid + "','" + username + "','" + password + "','"+active+"','"+reset+"','"+reset_duration+"')";
+            String sql = "INSERT INTO user(roleid,username,password,email,active,status,reset_duration) VALUES ('" + rid + "','" + username + "','" + password + "','" + email + "','" + active + "','" + reset + "','" + reset_duration + "')";
             Statement statement2 = con.createStatement();
             statement2.executeUpdate(sql);
+            
+            sendEmail(username,pwd,email);
         } catch (SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
+        } finally {
             try {
                 con.close();
             } catch (SQLException ex) {
@@ -81,7 +84,7 @@ public class UserDao {
             statement2.executeUpdate(sql);
         } catch (SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
+        } finally {
             try {
                 con.close();
             } catch (SQLException ex) {
@@ -91,10 +94,8 @@ public class UserDao {
     }
 
     public static ArrayList<UserBean> loadUserData(String uid) {
-        System.out.println("load user data function");
         ArrayList<UserBean> data = new ArrayList<>();
         String userid = uid;
-        System.out.println("userid in function :"+userid);
         Connection con = DBConnection.createConnection();
         try {
             Statement update_statement = con.createStatement();
@@ -102,16 +103,15 @@ public class UserDao {
             ResultSet result = update_statement.executeQuery(sql);
 
             while (result.next()) {
-                
-                UserBean ub = new UserBean(result.getString("u.userid"),result.getString("u.username"),result.getString("u.password"),result.getString("r.rolename"),result.getString("u.active"),result.getString("reset_time"), result.getInt("reset_duration"));
+
+                UserBean ub = new UserBean(result.getString("u.userid"), result.getString("u.username"), result.getString("u.password"), result.getString("r.rolename"), result.getString("u.active"), result.getString("reset_time"), result.getInt("reset_duration"));
                 data.add(ub);
-                System.out.println("3:user data loaded successfully");
             }
         } catch (SQLException ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(InterfaceDao.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
+        } finally {
             try {
                 con.close();
             } catch (SQLException ex) {
@@ -130,12 +130,12 @@ public class UserDao {
         String status = activeS;
         Connection con = DBConnection.createConnection();
         try {
-            String sql = "UPDATE user SET roleid='"+rid+"',username='"+uname+"',password='"+pwd+"',active='"+status+"' WHERE userid='"+uid+"'";
+            String sql = "UPDATE user SET roleid='" + rid + "',username='" + uname + "',password='" + pwd + "',active='" + status + "' WHERE userid='" + uid + "'";
             Statement statement2 = con.createStatement();
             statement2.executeUpdate(sql);
         } catch (SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
+        } finally {
             try {
                 con.close();
             } catch (SQLException ex) {
@@ -148,22 +148,20 @@ public class UserDao {
         boolean flag = true;
         Connection con = DBConnection.createConnection();
         try {
-            String sql = "SELECT COUNT(*) AS num FROM user WHERE username='"+username+"'";
+            String sql = "SELECT COUNT(*) AS num FROM user WHERE username='" + username + "'";
             Statement stat = con.createStatement();
             ResultSet result = stat.executeQuery(sql);
-            
-            while (result.next()) {                
-                System.out.println("num is:"+result.getString("num"));
-                
-                if (Integer.parseInt(result.getString("num"))== 0) {
+
+            while (result.next()) {
+
+                if (Integer.parseInt(result.getString("num")) == 0) {
                     flag = false;
-                    System.out.println("flg in if" + flag);
                     return flag;
                 }
             }
         } catch (NumberFormatException | SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
+        } finally {
             try {
                 con.close();
             } catch (SQLException ex) {
@@ -177,19 +175,61 @@ public class UserDao {
         Connection con = DBConnection.createConnection();
         ArrayList<UserBean> result = new ArrayList<>();
         try {
-            String sql = "select u.userid, u.username, r.rolename from user u, role r where username like '" + "%" + keyword + "%" +"' and u.roleid=r.roleid";
+            String sql = "select u.userid, u.username, r.rolename from user u, role r where username like '" + "%" + keyword + "%" + "' and u.roleid=r.roleid";
             Statement statemenet = con.createStatement();
             ResultSet resultSet = statemenet.executeQuery(sql);
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 UserBean search = new UserBean(resultSet.getString("u.userid"), resultSet.getString("u.username"), resultSet.getString("r.rolename"));
                 result.add(search);
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return result; 
+        return result;
     }
 
-    
+    public static int NoOfUsers() {
+        Connection con = DBConnection.createConnection();
+        int userCount = 0;
+        try {
+
+            String sql = "SELECT COUNT(*) AS userCount FROM user";
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()) {
+                userCount = rs.getInt("userCount");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return userCount;
+    }
+
+    public static ArrayList<UserBean> viewAllUsers(int start, int count) {
+        Connection con = DBConnection.createConnection();
+        ArrayList<UserBean> user = new ArrayList<>();
+        try {
+            String sql = "SELECT u.userid, u.username,u.password, u.active, r.rolename FROM user u, role r WHERE u.roleid=r.roleid limit " + start + "," + count;
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()) {
+                UserBean ub = new UserBean(rs.getString("u.userid"), rs.getString("u.username"), rs.getString("u.password"), rs.getString("r.rolename"), rs.getString("u.active"));
+                user.add(ub);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return user;
+    }
+
+    private static void sendEmail(String username, String pwd, String email) {
+        System.out.println("Email Sendiing code here to \nuser:"+username+"\npassword:"+pwd+"\nemail:"+email);
+    }
 
 }

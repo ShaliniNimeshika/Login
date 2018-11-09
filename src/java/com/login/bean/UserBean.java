@@ -5,16 +5,25 @@
  */
 package com.login.bean;
 
+import java.io.Serializable;
+
 /**
  *
  * @author shalini_w
  */
-public class UserBean {
+public class UserBean implements Serializable{
+  private static final long serialVersionUID = 1L;
+  
     private String userid;
     private String username;
     private String password;
     private String urole;
     private String active;
+    private String cDate;
+
+    public String getcDate() {
+        return cDate;
+    }
     private String reset_time;
     private int reset_duration;
 
@@ -37,12 +46,21 @@ public class UserBean {
         this.urole = urole;
     }
     
-     public UserBean(String userid, String username,String password,String urole,String active){
+    public UserBean(String userid, String username,String password,String urole,String active){
         this.userid = userid;
         this.username = username;
         this.password = password;
         this.urole = urole;
         this.active = active;
+    }
+    
+     public UserBean(String userid, String username,String password,String urole,String active,String cDate){
+        this.userid = userid;
+        this.username = username;
+        this.password = password;
+        this.urole = urole;
+        this.active = active;
+        this.cDate = cDate;
     }
      
      public UserBean(String userid, String username, String password, String urole, String active, String reset_time, int reset_duration) {

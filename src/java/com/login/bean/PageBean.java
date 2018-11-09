@@ -5,12 +5,16 @@
  */
 package com.login.bean;
 
+import java.io.Serializable;
+
 /**
  *
  * @author shalini_w
  */
 
-public class PageBean {
+public class PageBean implements Serializable{
+  private static final long serialVersionUID = 1L;
+  
     private String url;
     private String name;
     private String interfaceId;

@@ -6,9 +6,6 @@
 package com.login.util;
 
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -36,30 +33,21 @@ public class PageFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-//        String password = request.getParameter("password");
-//        if (password.equals("suren@123")) {
-//            chain.doFilter(request, response);//sends request to next resource  
-//        } else {
-//            out.print("username or password error!");
-//            RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-//            rd.forward(request, response);
-//        }
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         HttpSession session = req.getSession(false);
         String loginURI = req.getContextPath();
 
         boolean loggedIn = session != null && session.getAttribute("uname") != null;
-        System.out.println("session not null:" + session != null);
-//        System.out.println("username not null:"+session.getAttribute("uname") != null);
-        System.out.println("loggedIn session:" + loggedIn);
 
         boolean loginRequest = req.getRequestURI().equals(loginURI); //false
 
-        System.out.println(loggedIn || loginRequest);
         if (loggedIn || loginRequest) {
             chain.doFilter(request, response);
         } else {
+            res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+            res.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+            res.setDateHeader("Expires", 0); // Proxies.
             res.sendRedirect(loginURI);
         }
     }

@@ -8,6 +8,7 @@ package com.login.dao;
 import com.login.bean.LoginBean;
 import com.login.bean.PageBean;
 import com.login.util.DBConnection;
+import com.login.util.PasswordEncryptDecrypt;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,19 +23,22 @@ import java.util.logging.Logger;
  */
 public class LoginDao {
 
-    static String role = null;
     static String roleid = null;
 
     public static boolean authenticateUser(LoginBean loginbean) {
         Connection con = DBConnection.createConnection();
-        String unameDB = null;
-        String passwordDB = null;
-        String roleDB = null;
+        String unameDB;
+        String passwordDB;
+        String roleDB;
         try {
 
             String username = loginbean.getUsername();
             String password = loginbean.getPassword();
-
+            
+            //encrypt input password
+            PasswordEncryptDecrypt pwdEn = new PasswordEncryptDecrypt();
+            String hashPwd = pwdEn.getEncryptedPassword(password);
+            
             Statement statement = con.createStatement();
             String sql = "SELECT u.username , u.password, u.active , r.rolename , r.roleid from user u , role r where u.roleid=r.roleid";
             ResultSet rs = statement.executeQuery(sql);
@@ -46,7 +50,7 @@ public class LoginDao {
                 roleDB = rs.getString("r.rolename");
                 roleid = rs.getString("r.roleid");
 
-                if (username.equals(unameDB) && password.equals(passwordDB)) {
+                if (username.equals(unameDB) && hashPwd.equals(passwordDB)) {
 
                     if (active.equals("1")) {
                         loginbean.setRoleid(roleid);
@@ -103,14 +107,14 @@ public class LoginDao {
 
         try {
             String username = loginbean.getUsername();
-            String sql = "SELECT status from user where username = '"+username+"'";
+            String sql = "SELECT status from user where username = '" + username + "'";
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(sql);
-            while (rs.next()) {                
+            while (rs.next()) {
                 status = rs.getString("status");
             }
         } catch (SQLException ex) {
-             Logger.getLogger(LoginDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 con.close();
@@ -127,15 +131,15 @@ public class LoginDao {
 
         try {
             String username = loginbean.getUsername();
-            String sql = "SELECT reset_duration from user where username = '"+username+"'";
+            String sql = "SELECT reset_duration from user where username = '" + username + "'";
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(sql);
-            while (rs.next()) {                
+            while (rs.next()) {
                 String days = rs.getString("reset_duration");
                 duration = Integer.parseInt(days);
             }
         } catch (SQLException ex) {
-             Logger.getLogger(LoginDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 con.close();
@@ -152,14 +156,14 @@ public class LoginDao {
 
         try {
             String username = loginbean.getUsername();
-            String sql = "SELECT reset_time from user where username = '"+username+"'";
+            String sql = "SELECT reset_time from user where username = '" + username + "'";
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(sql);
-            while (rs.next()) {                
+            while (rs.next()) {
                 date = rs.getString("reset_time");
             }
         } catch (SQLException ex) {
-             Logger.getLogger(LoginDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 con.close();

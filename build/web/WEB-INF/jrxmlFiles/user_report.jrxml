@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6e1d8c35-7e6d-44ef-8c08-c3b6a5b5e23d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="userid" class="java.lang.String"/>
+	<field name="username" class="java.lang.String"/>
+	<field name="rolename" class="java.lang.String"/>
+	<field name="created_time" class="java.lang.String"/>
+	<field name="active" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="91" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="554" height="91" forecolor="#006699" backcolor="#9999FF" uuid="f72296e2-24d2-4a9f-bae3-4c5faef2bfff"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="180" y="10" width="192" height="41" forecolor="#000000" uuid="284f0bc9-ca06-4043-800c-ade27358ab19"/>
+				<textElement textAlignment="Center">
+					<font size="28" isBold="true"/>
+				</textElement>
+				<text><![CDATA[User Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="199" y="51" width="225" height="24" forecolor="#000000" uuid="b14cb6c5-8c57-4885-bbca-bc48c04ea1f6"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[All Registered Users]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="29" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="102" y="0" width="78" height="20" uuid="a12b941b-a31c-422b-b18e-05072b8d2337"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[User Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="291" y="0" width="150" height="20" uuid="5891de1c-9546-4cfe-a0f6-85d9e2a805ab"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Created Date & Time]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="449" y="0" width="95" height="20" uuid="a63557f8-aab5-4bd1-90f3-aeb2409b9c83"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[User Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="22" y="0" width="61" height="20" uuid="0aa495f6-f66b-44c1-a1dd-4f8f4b182d8b"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[User ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="205" y="0" width="78" height="20" uuid="62d0df3e-af79-4c7e-840c-3befcc142398"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[User Role]]></text>
+			</staticText>
+			<line>
+				<reportElement x="5" y="21" width="550" height="1" forecolor="#006699" uuid="87c00227-0f33-4578-bf8e-a49a764734c2"/>
+				<graphicElement>
+					<pen lineWidth="1.25"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="28" splitType="Stretch">
+			<line>
+				<reportElement x="5" y="26" width="550" height="1" forecolor="#999999" uuid="f9dd0ee5-0b01-4245-a01d-76e61929a806"/>
+				<graphicElement>
+					<pen lineWidth="1.25"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="22" y="4" width="61" height="20" uuid="d1b49442-b19f-4e0e-bc04-aeff03e30176"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{userid}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="91" y="3" width="100" height="20" uuid="9db2db20-5d82-4163-8e94-bba9c5519c99"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{username}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="193" y="3" width="100" height="20" uuid="6c6f302b-453f-4dda-a74b-5f33a3a652df"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rolename}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="293" y="3" width="148" height="20" uuid="a68ecac2-0172-40e0-b40e-04c21a071fe9"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{created_time}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="445" y="3" width="100" height="20" uuid="c90e495d-4321-485d-ad08-36e92f88ac3f"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{active}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="4" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="79" splitType="Stretch">
+			<textField pattern="EEE, d MMM yyyy HH:mm:ss Z">
+				<reportElement x="5" y="59" width="259" height="20" forecolor="#666666" uuid="a6b4538e-c22a-47c2-8dff-b45c78a0ed03"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="434" y="59" width="80" height="20" uuid="02d5c083-d0d5-413f-b0da-b84c127fee16"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="514" y="59" width="40" height="20" uuid="be75841b-e90f-400a-8b10-029052f36285"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

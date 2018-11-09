@@ -9,12 +9,15 @@ import com.login.bean.LoginBean;
 import com.login.bean.PageBean;
 import com.login.dao.LoginDao;
 import com.login.util.Log4jLogger;
+import com.login.util.SessionVarList;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +29,6 @@ import javax.servlet.http.HttpSession;
  * @author shalini_w
  */
 public class LoginServlet extends HttpServlet {
-
 
     Log4jLogger log = new Log4jLogger();
 
@@ -72,8 +74,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        HttpSession session = request.getSession();
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         ArrayList<PageBean> al;
@@ -84,25 +85,24 @@ public class LoginServlet extends HttpServlet {
 
         //return the boolean value = true when the user authenticate by username and password successfully
         boolean flag = LoginDao.authenticateUser(loginbean);
-
+//        getServletContext().set
         if (flag == true) {
             try {
                 //check the user's reset password status : for first login of user
                 String reset = LoginDao.getResetStatus(loginbean);
-                
+
                 if (reset.equals("0")) {
                     request.setAttribute("username", username);
                     request.setAttribute("password", password);
-                    request.getRequestDispatcher("password_reset.jsp").forward(request, response);
+                    request.getRequestDispatcher("WEB-INF/password_reset.jsp").forward(request, response);
                 } else {
-                    
+
                     //check the reset password duration with the current date and last reset date : for all users
                     int reset_duration = LoginDao.getResetDuration(loginbean);
                     String reset_date = LoginDao.getResetTime(loginbean);
 
                     //get today date
                     LocalDate today = LocalDate.now();
-                    
 
                     //get the last reset date into localdate object
                     LocalDate last_reset = LocalDate.parse(reset_date);
@@ -114,19 +114,50 @@ public class LoginServlet extends HttpServlet {
                     if (reset_duration <= intervalDays) {
                         request.setAttribute("username", username);
                         request.setAttribute("password", password);
-                        request.getRequestDispatcher("password_reset.jsp").forward(request, response);
+                        request.getRequestDispatcher("WEB-INF/password_reset.jsp").forward(request, response);
                     } else {
                         //when the users complete the all checkpoints they can log
                         al = LoginDao.loadPages();
 
+                        //---------start multiple login------------
+                        System.out.println(">>>>>>>>>> start session checking");
+                        //getting the servlet context
+                        ServletContext context = getServletConfig().getServletContext();
+                        HashMap<String, String> usermap = (HashMap<String, String>) context.getAttribute(SessionVarList.USERMAP);
+                        //use hashmap to store username and related sessionID
+                        if (usermap == null) {
+                            //if usermap is not created yet, create new one
+                            usermap = new HashMap<>();
+                            context.setAttribute(SessionVarList.USERMAP, usermap);
+                        }
+                        HttpSession session = request.getSession();
+                        String sessionID = session.getId();
+                        System.out.println("Session ID : " + sessionID);
+                        System.out.println(">>>>>>>>>> session checked");
+
+                        System.out.println(">>>>>>>>>> start IP checking");
+                        String newIP = request.getRemoteAddr();
+                        System.out.println("IP Address : " + newIP);
+                        HashMap<String, String> userdev = (HashMap<String, String>) context.getAttribute(SessionVarList.USERDEVICE);
+                        if (userdev == null) {
+                            userdev = new HashMap<>();
+                            context.setAttribute(SessionVarList.USERDEVICE, userdev);
+                        }
+                        System.out.println(">>>>>>>>>> IP Checked");
+                        //--------- finish multiple login-------------
+
+                        usermap.put(username, sessionID);
+                        userdev.put(username, newIP);
+
+                        session.setAttribute("currentIP", newIP);
                         session.setAttribute("pages", al);
                         session.setAttribute("uname", username);
                         session.setAttribute("roleid", loginbean.getRoleid());
-                        request.getRequestDispatcher("home.jsp").forward(request, response);
+                        request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
 
                         log.getLogger("System Log".toUpperCase(), "info", username, request);
-                    }
 
+                    }
                 }
             } catch (IOException | ServletException ex) {
                 Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);

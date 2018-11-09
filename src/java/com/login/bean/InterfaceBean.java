@@ -5,13 +5,15 @@
  */
 package com.login.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author shalini_w
  */
-public class InterfaceBean {
+public class InterfaceBean implements Serializable{
+  private static final long serialVersionUID = 1L;
 
     private String interfaceid;
     private String functionid;
@@ -68,6 +70,10 @@ public class InterfaceBean {
         this.if_id = if_id;
     }
 
+    public InterfaceBean(String if_id, String f_name) {
+        this.if_id = if_id;
+        this.f_name = f_name;
+    }
     /**
      * @return the interfaceid
      */

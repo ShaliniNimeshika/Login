@@ -5,13 +5,16 @@
  */
 package com.login.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author shalini_w
  */
-public class PrivilageBean {
+public class PrivilageBean implements Serializable{
+  private static final long serialVersionUID = 1L;
+  
     private String pid;
     private String rid;
     private String ifid;

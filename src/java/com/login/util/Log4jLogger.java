@@ -7,6 +7,7 @@ package com.login.util;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import javax.servlet.http.HttpServletRequest;
@@ -20,25 +21,24 @@ public class Log4jLogger {
     public void getLogger(String msg, String type, String username, HttpServletRequest request) {
 		Logger l = Logger.getLogger("Log");
 		try {
-			FileHandler fh = null;
+			FileHandler fh;
                    
-                        fh = new FileHandler("D:/Projects/Sample Projects/Login Log/aclLog.log", true);
+                        fh = new FileHandler("D:/Projects/Login Project/Login Log/aclLog.log", true);
                     
 			l.addHandler(fh);
 	        fh.setFormatter(new SimpleFormatter());
 	        if(type.equals("warn")) {
-	        	l.warning(msg+" USERNAME: "+username+" IP ADDRESS: "+ request.getRemoteAddr()+"\n\n");
+	        	l.log(Level.WARNING, "{0} USERNAME: {1} IP ADDRESS: {2}\n\n", new Object[]{msg, username, request.getRemoteAddr()});
 	        }
 	        else if(type.equals("info")) {
-	        	l.info(msg+" USERNAME: "+username+" IP ADDRESS: "+ request.getRemoteAddr()+"\n\n");
+	        	l.log(Level.INFO, "{0} USERNAME: {1} IP ADDRESS: {2}\n\n", new Object[]{msg, username, request.getRemoteAddr()});
 	        }
 	        fh.close();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (SecurityException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        // TODO Auto-generated catch block
+        
 	}
 }

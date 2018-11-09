@@ -5,11 +5,15 @@
  */
 package com.login.bean;
 
+import java.io.Serializable;
+
 /**
  *
  * @author shalini_w
  */
-public class RoleAccessBean {
+public class RoleAccessBean implements Serializable{
+  private static final long serialVersionUID = 1L;
+  
     private String rid;
     private String i_id;
     private String i_name;
@@ -18,6 +22,10 @@ public class RoleAccessBean {
 
     public String getIf_id() {
         return if_id;
+    }
+
+    public RoleAccessBean(String if_id) {
+        this.if_id = if_id;
     }
 
     public RoleAccessBean(String rid, String i_id, String i_name, String f_id, String f_name, String if_id) {

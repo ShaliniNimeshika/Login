@@ -12,7 +12,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -36,29 +35,21 @@ public class LoginFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
        
-
-//        String password = request.getParameter("password");
-//        if (password.equals("suren@123")) {
-//            chain.doFilter(request, response);//sends request to next resource  
-//        } else {
-//            out.print("username or password error!");
-//            RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-//            rd.forward(request, response);
-//        }
-
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         HttpSession session = req.getSession(false);
         String loginURI = req.getContextPath();
 
+//        String userIP = req.getRemoteAddr();
         boolean loggedIn = session != null;
-//        System.out.println(session.getAttribute("uname") != null);
         boolean loginRequest = req.getRequestURI().equals(loginURI); //false
         
-//        System.out.println(loggedIn || loginRequest);
         if (loggedIn || loginRequest) {
             chain.doFilter(request, response);
         } else {
+            res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+            res.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+            res.setDateHeader("Expires", 0); // Proxies.
             res.sendRedirect(loginURI);
         }
     }

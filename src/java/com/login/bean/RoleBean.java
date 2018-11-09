@@ -5,6 +5,7 @@
  */
 package com.login.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,9 @@ import java.util.List;
  *
  * @author shalini_w
  */
-public class RoleBean {
+public class RoleBean implements Serializable{
+  private static final long serialVersionUID = 1L;
+  
     private String rolename;
     private String roleid;
     private ArrayList<PrivilageBean> pbean;

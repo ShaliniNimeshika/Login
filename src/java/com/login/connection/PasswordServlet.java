@@ -6,6 +6,7 @@
 package com.login.connection;
 
 import com.login.dao.PasswordDao;
+import com.login.util.PasswordEncryptDecrypt;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -30,7 +31,7 @@ public class PasswordServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
     }
 
     /**
@@ -45,11 +46,25 @@ public class PasswordServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-        
+
         String username = request.getParameter("username");
         String curpwd = request.getParameter("cur_password");
         String newpwd = request.getParameter("new_password");
-        System.out.println("new password"+newpwd);
+
+        //encrypt password
+        PasswordEncryptDecrypt enDec = new PasswordEncryptDecrypt();
+//        enDec.setEnpwd(newpwd);
+//        System.out.println("encryptedPassword : " + enDec.getEnpwd());
+//
+//        enDec.setDecpwd(enDec.getEnpwd());
+//        System.out.println("decrypted password : " + enDec.getDecpwd());
+        
+        
+        //encrypt using SHA-256
+        String password = enDec.getEncryptedPassword(newpwd);
+        System.out.println("SHA-256 : "+ enDec.getEncryptedPassword(newpwd));
+        
+        
         
         /*current password
           new password
@@ -57,9 +72,9 @@ public class PasswordServlet extends HttpServlet {
           validations are done in front end.
         
           when the user submit the correct data >> go to resetPassword() and update the database
-        */
-        PasswordDao.resetPassword(username,curpwd,newpwd);
-        
+         */
+        PasswordDao.resetPassword(username, curpwd, password);
+
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 

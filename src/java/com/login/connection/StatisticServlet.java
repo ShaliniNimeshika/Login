@@ -6,11 +6,15 @@
 package com.login.connection;
 
 import com.login.bean.FunctionBean;
+import com.login.common.Common;
 import com.login.dao.InterfaceDao;
+import com.login.util.SessionVarList;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +26,7 @@ import javax.servlet.http.HttpSession;
  * @author shalini_w
  */
 public class StatisticServlet extends HttpServlet {
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -35,7 +39,7 @@ public class StatisticServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         doPost(request, response);
     }
 
@@ -67,15 +71,32 @@ public class StatisticServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         String roleid = session.getAttribute("roleid").toString();
-        String interfaceid = request.getParameter("index");
-        
-        ArrayList<FunctionBean> fb;
-        try {
-            fb = InterfaceDao.loadFunction(roleid,interfaceid);
-            request.setAttribute("functions", fb);
-            request.getRequestDispatcher("statistic.jsp").forward(request, response);
-        } catch (IOException | ServletException ex) {
-            Logger.getLogger(StatisticServlet.class.getName()).log(Level.SEVERE, null, ex);
+
+        String newIP = session.getAttribute("currentIP").toString();
+        String username = session.getAttribute("uname").toString();
+
+        ServletContext context = getServletConfig().getServletContext();
+        HashMap<String, String> usermap = (HashMap<String, String>) context.getAttribute(SessionVarList.USERMAP);
+        HashMap<String, String> userdev = (HashMap<String, String>) context.getAttribute(SessionVarList.USERDEVICE);
+
+        Common common = new Common();
+        boolean logged = common.checkUserLogin(usermap, username);
+        boolean sameDevice = common.checkUserDevice(userdev, username, newIP);
+
+        if (logged == true && sameDevice == false) {
+            request.setAttribute("msg", "Logged using another device");
+            request.getRequestDispatcher("index.jsp").include(request, response);
+        } else {
+            String action = request.getParameter("action");
+            String interfaceid = request.getParameter("index");
+            ArrayList<FunctionBean> fb;
+            try {
+                fb = InterfaceDao.loadFunction(roleid, interfaceid);
+                request.setAttribute("functions", fb);
+                request.getRequestDispatcher("WEB-INF/statistic.jsp").forward(request, response);
+            } catch (IOException | ServletException ex) {
+                Logger.getLogger(StatisticServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

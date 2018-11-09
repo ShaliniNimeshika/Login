@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+        <file>
+            <url>web/WEB-INF/view_page.jsp</url>
+            <bookmark id="1">
+                <name/>
+                <line>150</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/Projects/Sample%20Projects/Login/web/update_role.jsp</file>
-            <file>file:/D:/Projects/Sample%20Projects/Login/src/java/com/login/connection/UserFunctions.java</file>
-            <file>file:/D:/Projects/Sample%20Projects/Login/web/add_role.jsp</file>
-            <file>file:/D:/Projects/Sample%20Projects/Login/src/java/com/login/connection/UserManagement.java</file>
-            <file>file:/D:/Projects/Sample%20Projects/Login/src/java/com/login/bean/RoleBean.java</file>
-            <file>file:/D:/Projects/Sample%20Projects/Login/src/java/com/login/bean/RoleAccessBean.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

@@ -23,6 +23,7 @@
             <div class="row">
                 <div class="col-sm-6 col-md-4 col-md-offset-4">
                     <h1 class="text-center login-title">Sign in</h1><br>
+                    <% String message = (String) request.getAttribute("msg");%>
                     <div class="account-wall">
                         <form class="form-signin" action="home" method="post">
                             <input type="text" class="form-control" name="username" placeholder="Username" required autofocus>
@@ -37,3 +38,9 @@
         </div>
     </body>
 </html>
+<script type="text/javascript">
+    var msg = "<%=message%>";
+    if (msg !== 'null') {
+        alert(msg);
+    }
+</script>
