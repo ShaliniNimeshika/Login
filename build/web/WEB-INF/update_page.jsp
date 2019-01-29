@@ -4,7 +4,6 @@
     Author     : shalini_w
 --%>
 
-<%@page import="com.sun.org.apache.bcel.internal.generic.BREAKPOINT"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -64,7 +63,7 @@
                                                                     <c:if test="${functionsCount.count == valueCount.count}">
                                                                         <c:if test="${func == '1'}">
                                                                             <li><input type="checkbox" checked="true" value="${item.getFunction_id()}" name="functions">&nbsp;&nbsp;<c:out value="${item.getFunction_name()}"></c:out></li>
-                                                                        </c:if>
+                                                                            </c:if>
 
                                                                         <c:if test="${func == '0'}">
                                                                             <li><input type="checkbox" value="${item.getFunction_id()}" name="functions">&nbsp;&nbsp;<c:out value="${item.getFunction_name()}"></c:out></li>
